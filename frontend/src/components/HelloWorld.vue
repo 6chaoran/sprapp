@@ -12,65 +12,58 @@ import InputMessage from './InputMessage.vue';
 import RecentRecords from './RecentRecords.vue';
 import Spinner from './Spinner.vue';
 import QueryOutput from './QueryOutput.vue';
+import { ref, computed } from 'vue';
+import { fetchData, postData, listRecentRecords } from '@/assets/js/apis'
+import { onMounted } from 'vue';
 
-</script>
-
-<script>
-import { fetchData, postData } from '@/assets/js/apis'
-export default {
-  data: () => ({
-    prediction: {
+const prediction = ref({
       decision: "pass",
       odds: 0.8,
       duration: 118,
-    },
-    showSpinner: false,
-    showOutput: false,
-    records: [],
-    matches: [
-                        // { 'desc': 1, 'result': 'pass', 'duration': 123, 'update_time': '2023-01-01', 'desc_en': 'eng' },
-                        // { 'desc': 2, 'result': 'rejected', 'duration': 234, 'update_time': '2023-02-01', 'desc_en': 'eng' }
-                    ],
-  }),
-  methods: {
-    async sendMessage(message) {
-      this.showOutput=false
-      this.showSpinner = true
-      console.log(message)
-      // this.records = await fetchData('list_records')
-      const matches = await postData('get_matches', {text: message})
-      this.showSpinner = false
-      this.showOutput=true
-      console.log(matches.matches)
-      this.matches = matches.matches
-    }
-  },
-  computed: {
-    resultStyle() {
-      return this.prediction.decision === 'pass' ? 'text-green' : 'text-red';
-    },
-  }
-}
+    });
+const showSpinner = ref(false);
+const showOutput = ref(false);
+const records = ref([
+  {username: 'user', datetime: '2023-01-01', description: 'pass', applied_date:'2023-01-01', closed_date: '2023-09-01', status: 'rejected'},
+  {username: 'user', datetime: '2023-01-01', description: 'pass', applied_date:'2023-01-01', closed_date: '2023-09-01', status: 'pass'}
+
+]);
+const matches = ref([
+  { 'desc': 1, 'result': 'pass', 'duration': 123, 'update_time': '2023-01-01', 'desc_en': 'eng' },
+  { 'desc': 2, 'result': 'rejected', 'duration': 234, 'update_time': '2023-02-01', 'desc_en': 'eng' }
+]);
+const sendMessage = async(message) => {
+  showOutput.value = false;
+  showSpinner.value = true;
+  console.log(message);
+  const resp = await postData('get_matches', {text: message})
+  showSpinner.value = false
+  showOutput.value =true
+  matches.value = resp.matches;
+  prediction.value.decision = resp.pred_decision;
+  prediction.value.odds = resp.odds;
+  prediction.value.duration = resp.pred_duration;
+  console.log(resp);
+};
+
+const resultStyle = computed(() => {
+  return prediction.value.decision === 'pass' ? 'text-green' : 'text-red';
+});
+
+onMounted( async () => {
+  records.value = await fetchData('/list_records');
+});
+
 </script>
 <style>
-.text-green {
-  color: green;
-}
-
-.text-red {
-  color: red;
-}
 
 .progress-container {
   display: flex;
   align-items: center;
-  /* Align items vertically */
   height: 25px;
-  /* Adjust the height as needed */
 }
 
 .progress-text {
-  margin-left: 10px;
-  /* Adjust the spacing between the circular progress and the text */
+  margin-left: 20px;
 }
 </style>
