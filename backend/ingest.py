@@ -34,7 +34,7 @@ class Ingestor:
         return hashed_string
 
 
-    def ingest(self, userid, text, result, applied_date, closed_date, update_time):
+    def ingest(self, userid: str, text: str, result: str, applied_date: str, closed_date: str, update_time) -> dict:
         userid = self.md5_hash(userid)
         completion = self.parser.get_completion(text)
         completion_dict = json.loads(str(completion.choices[0].message.content))
@@ -53,3 +53,4 @@ class Ingestor:
         payload = (userid, embedding, metadata | extraction)
         self.index.upsert([payload])
         print(f'id [{userid}] ingested:  {text}')
+        return payload

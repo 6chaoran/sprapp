@@ -56,8 +56,6 @@ origins = [
     "https://www.ichaoran.com",
     "http://6chaoran.github.io",
     "https://6chaoran.github.io",
-    "http://spr.chaoran.tk",
-    "https://spr.chaoran.tk",
     "http://frontend-dot-sgprapp.et.r.appspot.com",
     "https://frontend-dot-sgprapp.et.r.appspot.com"
 ]
@@ -89,7 +87,8 @@ def get_matches(text:str, request:Request) -> dict:
         vector=v,
         top_k=top_n,
         include_metadata=True,
-        include_values=True
+        include_values=True,
+        filter={'result': {"$in":['pass', 'rejected']}}
     )
     out = matches.to_dict()
     out = [i['metadata'] for i in out['matches']]
@@ -104,11 +103,12 @@ def get_matches(text:str, request:Request) -> dict:
 @app.post("/add_record")
 def add_record(username:str, password:str, text: str, email: str, status: str, applied_date:str, closed_date:str):
     msg = maria_db.add_row(username, password, email, status, text, applied_date, closed_date, mode="create")
+    _ = maria_db.add_row(username, password, email, status, text, applied_date, closed_date, mode="create", tablename='profile_latest')
     return msg
 
 @app.post("/ingest")
 def ingest(username, text, status, applied_date, closed_date, update_time):
-    ingestor.ingest(username, text, status, applied_date, closed_date, update_time)
+    _ = ingestor.ingest(username, text, status, applied_date, closed_date, update_time)
 
 @app.post("/edit_record")
 def add_record(username:str, password:str, text: str, email: str, status: str, applied_date:str, closed_date:str):
