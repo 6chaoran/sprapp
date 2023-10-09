@@ -37,7 +37,7 @@ class Ingestor:
     def ingest(self, userid: str, text: str, result: str, applied_date: str, closed_date: str, update_time) -> dict:
         userid = self.md5_hash(userid)
         completion = self.parser.get_completion(text)
-        completion_dict = json.loads(str(completion.choices[0].message.content))
+        completion_dict = json.loads(str(completion.choices[0].message.content), strict = False)
         embedding = self.parser.get_embedding(text)
         duration = self.get_duration(applied_date, closed_date)
         metadata = {

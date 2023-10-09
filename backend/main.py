@@ -37,6 +37,14 @@ sgclient = Email(SENDGRID_API_KEY)
 from ingest import Ingestor
 ingestor = Ingestor(index, parser)
 
+from batch_ingest import BatchIngestor
+import pandas as pd
+from sqlalchemy import create_engine
+port = 3306
+schema = 'sgprapp'
+engine = create_engine(f'mysql+mysqlconnector://{MARIA_DB_USER}:{MARIA_DB_PASSWORD}@{MARIA_DB_HOST}:{port}/{schema}', echo = False)
+ingestor_b = BatchIngestor(parser, engine, maria_db, index, uat = True)
+
 # reCAPTHCA
 # from recaptcha import reCAPTCHA
 # recaptcha = reCAPTCHA()
@@ -88,7 +96,10 @@ def get_matches(text:str, request:Request) -> dict:
         top_k=top_n,
         include_metadata=True,
         include_values=True,
-        filter={'result': {"$in":['pass', 'rejected']}}
+        filter={
+            'result': {"$in":['pass', 'rejected']},
+            'duration': {"$gt": 0}
+                }
     )
     out = matches.to_dict()
     out = [i['metadata'] for i in out['matches']]
@@ -106,18 +117,43 @@ def add_record(username:str, password:str, text: str, email: str, status: str, a
     _ = maria_db.add_row(username, password, email, status, text, applied_date, closed_date, mode="create", tablename='profile_latest')
     return msg
 
+@app.post("/api/v1/add_record")
+def add_record(username:str, password:str, text: str, email: str, status: str, applied_date:str, closed_date:str):
+    msg = maria_db.add_row(username, password, email, status, text, applied_date, closed_date, mode="create")
+    _ = maria_db.add_row(username, password, email, status, text, applied_date, closed_date, mode="create", tablename='uat_profile_latest')
+    return msg
+
 @app.post("/ingest")
 def ingest(username, text, status, applied_date, closed_date, update_time):
     _ = ingestor.ingest(username, text, status, applied_date, closed_date, update_time)
 
+@app.post("/api/v1/ingest")
+def ingest_b(username, text, status, applied_date, closed_date, update_time):
+    id = username + '-' + update_time
+    row = pd.Series({
+        'username': username,
+        'description': text,
+        'status': status,
+        'applied_date': applied_date,
+        'closed_date': closed_date,
+        'update_ts': update_time,
+        'id': id
+    })
+    _ = ingestor_b.ingest_row(row)
+
 @app.post("/edit_record")
 def add_record(username:str, password:str, text: str, email: str, status: str, applied_date:str, closed_date:str):
     msg = maria_db.add_row(username, password, email, status, text, applied_date, closed_date, mode="edit")
+    maria_db.update_profile_latest()
     return msg
 
 @app.get("/list_records")
 def list_records() -> list[dict]:
     return maria_db.fetch_all(nrows = 10)
+
+@app.get("/api/v1/list_records")
+def api_list_records() -> list[dict]:
+    return maria_db.api_fetch_all(tablename='profile_latest')
 
 @app.post("/send_email")
 def send_email(recipient_email: str, 

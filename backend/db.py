@@ -142,6 +142,12 @@ class DB:
             df = df[:nrows]
         return df.to_dict(orient='records')
     
+    def api_fetch_all(self, tablename = 'uat_profile_latest'):
+        self.connect()
+        df = pd.read_sql(f'select * from {tablename} order by timestamp desc limit 10;', con=self.connection)
+        self.connection.close()
+        return df.to_dict(orient = 'records')
+    
 
     def update_profile_latest(self, tablename = 'profile_latest'):
         self.connect()
@@ -166,5 +172,29 @@ class DB:
         order by timestamp desc
         limit 10;
         """
+        cursor.execute(sqltext)
+        self.connection.commit()
+
+
+    def update_profile_latest_uat(self, tablename = 'uat_profile_latest'):
+        self.connect()
+        cursor = self.connection.cursor()
+        sqltext=f"""
+        drop table if exists {tablename};
+        """
+        cursor.execute(sqltext)
+        self.connection.commit()
+        sqltext = """
+        select 
+            id, username, password,email, description, description_en, duration, applied_date, closed_date, timestamp, status 
+            from 
+            (
+                select *, 
+                dense_rank() over(partition by username order by timestamp desc) as rank 
+                from uat_profile
+            ) as ranked
+            where rank = 1
+            order by timestamp desc
+            limit 10;"""
         cursor.execute(sqltext)
         self.connection.commit()
