@@ -1,19 +1,17 @@
 import mysql.connector
-from mysql.connector import Error
 import hashlib
 from datetime import datetime
 import pandas as pd
+from sqlalchemy import create_engine
+
 
 def md5_hash(string):
     # Create an instance of the MD5 hash object
     md5 = hashlib.md5()
-
     # Encode the string as bytes and hash it
     md5.update(string.encode('utf-8'))
-
     # Get the hexadecimal representation of the hash
     hashed_string = md5.hexdigest()
-
     return hashed_string
 
 class DB:
@@ -21,6 +19,9 @@ class DB:
         self.host = host
         self.user = user
         self.password = password
+        self.port = port = 3306
+        self.schema = schema = 'sgprapp'
+        self.engine = create_engine(f'mysql+mysqlconnector://{user}:{password}@{host}:{port}/{schema}', echo = False)
         self.connect()
         print(self.connection.get_server_info())
         self.connection.close()
@@ -30,20 +31,6 @@ class DB:
         cursor = self.connection.cursor()
         tablename = 'uat_profile' if uat else 'profile'
         cursor.execute(f"drop table if exists {tablename};")
-        # cursor.execute(f"""
-        # create table {tablename} 
-        #     (
-        #     id int AUTO_INCREMENT PRIMARY KEY,
-        #     username varchar(40) NOT NULL,
-        #     password varchar(40) NOT NULL,
-        #     email varchar(255) NOT NULL,
-        #     description TEXT NOT NULL,
-        #     applied_date varchar(10),
-        #     closed_date varchar(10),
-        #     timestamp DATETIME NOT NULL,
-        #     status varchar(10) NOT NULL
-        #     );
-        #     """)
         cursor.execute(f"""
         create table {tablename} 
             (
@@ -85,39 +72,84 @@ class DB:
             """)
         self.connection.commit()
         return True
+    
+    @staticmethod
+    def md5_hash(string):
+        # Create an instance of the MD5 hash object
+        md5 = hashlib.md5()
+        # Encode the string as bytes and hash it
+        md5.update(string.encode('utf-8'))
+        # Get the hexadecimal representation of the hash
+        hashed_string = md5.hexdigest()
+        return hashed_string
 
+    def get_duration(self, applied_date: str, closed_date: str) -> int:
+        try:
+            t1 = datetime.strptime(applied_date, '%Y-%m-%d')
+            t2 = datetime.strptime(closed_date, '%Y-%m-%d')
+            duration = (t2 - t1).days
+        except:
+            duration = -1
+        return duration
+    
     def connect(self):
         self.connection = mysql.connector.connect(host=self.host, database='sgprapp',
                                             user=self.user,
                                             password=self.password)
-        
+    @staticmethod
+    def escape_string(x: str) -> str:
+        return x.replace("'", "\\'")
+    
+    def check_user_exist(self, username):
+        username = self.escape_string(username)
+        self.connect()
+        cursor = self.connection.cursor()
+        cursor.execute(f"select * from profile where username = '{username}'")
+        res = cursor.fetchall()
+        if len(res) > 0 :
+            return True
+        return False
+
     def add_row(self, username, password, email, status, description, applied_date, closed_date, mode="create", update_ts = '', tablename = 'profile') -> str:
         self.connect()
         cursor = self.connection.cursor()
-        cursor.execute(f"select * from {tablename} where username = \'{username}\'")
+        sql = f"select * from {tablename} where username = '{self.escape_string(username)}'"
+        print(sql)
+        cursor.execute(sql)
         res = cursor.fetchall()
         if len(res) > 0 and mode == "create":
             return "user is already existed"
         
-        update_ts = datetime.now().strftime('%Y-%m-%d %T') if update_ts == '' else update_ts
+        timestamp = datetime.now().strftime('%Y-%m-%d %T')
+        update_ts = timestamp if update_ts == '' else update_ts
+        id = username + '-' + update_ts
+        id_hash = md5_hash(id)
+        duration = self.get_duration(applied_date, closed_date)
+        description_en = ''
+        embedding = ''
 
-        cursor.execute(f"""
-                       INSERT INTO {tablename} (username, password, email, description, applied_date, closed_date, timestamp, status) 
+        sql = f"""INSERT INTO {tablename} (id, id_hash, username, password, email, description, applied_date, closed_date, 
+                    duration, description_en, embedding, update_ts, status, timestamp) 
                        VALUES (
-                       \'{username}\', \'{password}\', 
-                       \'{email}\', \'{description}\',  \'{applied_date}\',  \'{closed_date}\', 
-                       \'{update_ts}\', \'{status}\');
-                       """)
+                       \'{self.escape_string(id)}\', \'{id_hash}\',
+                       \'{self.escape_string(username)}\', \'{password}\', 
+                       \'{email}\', \'{self.escape_string(description)}\',  \'{applied_date}\',  \'{closed_date}\', 
+                       \'{duration}\',  \'{self.escape_string(description_en)}\',  \'{embedding}\', 
+                       \'{update_ts}\', \'{status}\', \'{timestamp}\');
+                       """
+        print(sql)
+        cursor.execute(sql)
         self.connection.commit()
         self.connection.close()
         return "ok"
+    
         
     def verify_user(self, username, password) -> list:
         self.connect()
         cursor = self.connection.cursor()
         cursor.execute(f"""
                        select username, email, description, applied_date, closed_date, status from profile 
-                       where username = \'{username}\' and password = \'{password}\'
+                       where username = \'{self.escape_string(username)}\' and password = \'{password}\'
                        order by timestamp desc
                        limit 1;
                        """)
@@ -128,73 +160,31 @@ class DB:
                                 ).to_dict(orient='records')[0]
         return None
         
-    def fetch_all(self, nrows = 0, tablename = 'profile_latest'):
+
+    def api_fetch_all(self):
         self.connect()
-        cursor = self.connection.cursor()
-        # cursor.execute('select id, username, description, timestamp, status, applied_date, closed_date from profile order by timestamp desc;')
-        cursor.execute(f'select id, username, description, timestamp, status, applied_date, closed_date from {tablename} order by timestamp desc;')
-        df = pd.DataFrame(cursor.fetchall(), columns=['id','username', 'description', 'timestamp','status', 'applied_date', 'closed_date'])
-        self.connection.close()
-        # df = pd.DataFrame(df, columns=['id','username', 'description', 'datetime','status', 'applied_date', 'closed_date'])
-        # df['rank'] = df.groupby('username', as_index = False)['datetime'].rank(ascending=False)
-        # df = df.query("rank == 1")
-        if nrows > 0:
-            df = df[:nrows]
-        return df.to_dict(orient='records')
-    
-    def api_fetch_all(self, tablename = 'uat_profile_latest'):
-        self.connect()
-        df = pd.read_sql(f'select * from {tablename} order by timestamp desc limit 10;', con=self.connection)
+        df = pd.read_sql('select id, username, description,description_en, applied_date, closed_date, duration, update_ts, status from latest order by update_ts desc limit 10;', con=self.connection)
         self.connection.close()
         return df.to_dict(orient = 'records')
     
 
-    def update_profile_latest(self, tablename = 'profile_latest'):
+    def update_profile_latest(self):
         self.connect()
-        cursor = self.connection.cursor()
-        sqltext=f"""
-        drop table if exists {tablename};
-        """
-        cursor.execute(sqltext)
+        c = self.connection.cursor()
+        c.execute('drop table if exists latest;')
         self.connection.commit()
-
-        sqltext = f"""
-        create table {tablename} as
-        select 
-        id, username, password,email, description, applied_date, closed_date, timestamp, status 
-        from 
+        sql = """
+        create table latest as
         (
-            select *, 
-            dense_rank() over(partition by username order by timestamp desc) as rank 
-            from profile
-        ) as ranked
-        where rank = 1
-        order by timestamp desc
-        limit 10;
+        select *
+        from (select *,
+        row_number() over(partition by username order by update_ts desc) as r
+        from profile) as ranked
+        where r = 1
+        order by update_ts desc
+        limit 20
+        );
         """
-        cursor.execute(sqltext)
+        c.execute(sql)
         self.connection.commit()
-
-
-    def update_profile_latest_uat(self, tablename = 'uat_profile_latest'):
-        self.connect()
-        cursor = self.connection.cursor()
-        sqltext=f"""
-        drop table if exists {tablename};
-        """
-        cursor.execute(sqltext)
-        self.connection.commit()
-        sqltext = """
-        select 
-            id, username, password,email, description, description_en, duration, applied_date, closed_date, timestamp, status 
-            from 
-            (
-                select *, 
-                dense_rank() over(partition by username order by timestamp desc) as rank 
-                from uat_profile
-            ) as ranked
-            where rank = 1
-            order by timestamp desc
-            limit 10;"""
-        cursor.execute(sqltext)
-        self.connection.commit()
+        self.connection.close()

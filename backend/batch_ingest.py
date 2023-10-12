@@ -29,7 +29,30 @@ class BatchIngestor:
                 return closed_date
         else:
             return update_ts
-    
+        
+    @staticmethod
+    def impute_username(x: str) -> str:
+        return 'dummy' if x == None else str(x)
+
+    @staticmethod
+    def is_datestring_valid(x: str, format = '%Y-%m-%d'):
+        try:
+            datetime.strptime(x, format)
+            return True
+        except:
+            return False
+        
+    def impute_datestring(self, x: str, format = '%Y-%m-%d'):
+        if self.is_datestring_valid(x, format):
+            return x
+        else:
+            return None
+        
+    def confirmed_status_invalid_closed_date(self, row):
+        closed_date = row.closed_date
+        status = row.status
+        return (not self.is_datestring_valid(closed_date)) and status in ['pass', 'rejected']
+        
     def preprocess(self, df):
         _RESULT_MAP = {
             '等待': 'pending',
@@ -48,8 +71,18 @@ class BatchIngestor:
             }
         df_copy = df.drop(columns=['Col1']).rename(columns = _RENAME_MAP)
         df_copy['status'] = df_copy['status'].map(lambda x: _RESULT_MAP.get(x, x))
+        df_copy['applied_date'] = df_copy['applied_date'].map(self.impute_datestring)
+        df_copy['closed_date'] = df_copy['closed_date'].map(self.impute_datestring)
+        df_copy['username'] = df_copy['username'].map(self.impute_username)
         df_copy['update_ts'] = df_copy.apply(self.impute_update_ts, axis = 1)
         df_copy['id'] = df_copy.apply(lambda row: str(row['username']) + '-' + str(row['update_ts']), axis = 1)
+        # filter out short reviews
+        df_copy = df_copy.loc[df_copy['description'].map(lambda x: len(str(x)) >= 10), :]
+        # ensure valid status
+        df_copy = df_copy.loc[df_copy['status'].isin(['pass', 'pending', 'rejected']), :]
+        # ensure valid date
+        df_copy = df_copy.loc[df_copy['applied_date'].map(lambda x: x != None), :]
+        df_copy = df_copy.loc[~df_copy.apply(self.confirmed_status_invalid_closed_date, axis = 1),:]
         return df_copy
         
     def get_df_delta(self):
@@ -155,38 +188,56 @@ class BatchIngestor:
         payload = (id, embedding, metadata)
         return payload
 
+    @staticmethod
+    def escape_string(x: str) -> str:
+        return x.replace("'", "\\'")
 
-    def upload_to_db(self, row: pd.Series, completions: OpenAIObject, embedding: list) -> None:
+    def upload_to_db(self, row: pd.Series, completions: OpenAIObject = None, embedding: list = []) -> None:
         """upload to database:
         index: Pinecone index
         """
         uat = self.uat
         tbl_name_extraction = 'uat_extraction' if uat else 'extraction'
         tbl_name_profile = 'uat_profile' if uat else 'profile'
-        res = self.completion_to_dict(completions)
-        row['description_en'] = res.get('english_translation')
+
         row['duration'] = self.get_duration(row.applied_date, row.closed_date)
         row['id_hash'] = self.md5_hash(row.id)
 
-        extraction = {'id': row.id} | res.get('extraction', {})
-        
+        if completions:
+            res = self.completion_to_dict(completions)
+            row['description_en'] = res.get('english_translation')
+            extraction = {'id': row.id} | res.get('extraction', {})
+            df_extraction = self._prepare_extraction_upload(extraction)
+        else:
+            row['description_en'] = row.description
+            
         df_row = self._prepare_row_upload(row, embedding)
-        df_extraction = self._prepare_extraction_upload(extraction)
-
+        
         # upload to MySQL
+        self.maria.connect()
+        c = self.maria.connection.cursor()
+        c.execute(f"delete from {tbl_name_profile} where id = \'{self.escape_string(row.id)}\'")
+        self.maria.connection.commit()
         df_row.to_sql(tbl_name_profile, con = self.engine, if_exists='append', index = False)
         self.maria.connection.commit()
-        df_extraction.to_sql(tbl_name_extraction, con=self.engine, if_exists='append', index=False)
-        self.maria.connection.commit()
 
-        # upload to PineCone
-        payload = self._prepare_vectordb_row(row, res, embedding)
-        self.index.upsert([payload])
-
+        if completions:
+            c.execute(f"delete from {tbl_name_extraction} where id = \'{self.escape_string(row.id)}\'")
+            self.maria.connection.commit()
+            df_extraction.to_sql(tbl_name_extraction, con=self.engine, if_exists='append', index=False)
+            self.maria.connection.commit()
+            if row['status'] in ['pass', 'rejected']:
+                # upload to PineCone
+                payload = self._prepare_vectordb_row(row, res, embedding)
+                self.index.upsert([payload], namespace = 'spr')
 
     def ingest_row(self, row: pd.Series) -> None:
+        description = str(row.description).strip()
+        if len(description) >= 50:
+            completions = self.parser.get_completion(row.description)
+        else:
+            completions = None
         embedding = self.parser.get_embedding(row.description)
-        completions = self.parser.get_completion(row.description)
         self.upload_to_db(row, completions, embedding)
 
 
@@ -234,7 +285,6 @@ if __name__ == '__main__':
         progress_bar.set_postfix_str(f'[{row.id}]')
         try:
             ingestor.ingest_row(row)
-            sleep(2)
         except Exception as e:
             print(e)
             progress_bar.set_postfix_str('waiting')
