@@ -6,10 +6,14 @@
 
 // Styles
 import '@mdi/font/css/materialdesignicons.css'
-import 'vuetify/styles'
 
 // Composables
 import { createVuetify } from 'vuetify'
+
+// Dates
+import { VDatePicker } from 'vuetify/labs/VDatePicker'
+import 'vuetify/styles'
+
 
 // https://vuetifyjs.com/en/introduction/why-vuetify/#feature-guides
 export default createVuetify({
@@ -23,4 +27,7 @@ export default createVuetify({
       },
     },
   },
+  components: {
+    VDatePicker,
+  }
 })

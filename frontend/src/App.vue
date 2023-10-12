@@ -1,19 +1,19 @@
 <template>
   <v-app>
-    <v-app-bar app color="teal-darken-4" image="https://picsum.photos/1920/1080?random" density="default" rounded>
+    <v-app-bar app :color="themeColor" image="https://picsum.photos/1920/1080?random" density="default" rounded>
       <template v-slot:image>
         <v-img gradient="to top right, rgba(19,84,122,.8), rgba(128,208,199,.8)"></v-img>
       </template>
       <template v-slot:prepend>
-        <v-app-bar-nav-icon></v-app-bar-nav-icon>
+        <v-app-bar-nav-icon @click="drawer = !drawer"></v-app-bar-nav-icon>
       </template>
-
-      <v-app-bar-title>{{ title }}<span class="subclass">{{ version }}</span>  </v-app-bar-title>
+      <v-app-bar-title style="flex:none;" :text = "title"><span class="subclass">{{ version }}</span> </v-app-bar-title>
       <v-spacer></v-spacer>
-      <v-btn icon>
-        <v-icon>mdi-dots-vertical</v-icon>
-      </v-btn>
+      <InputDialog theme-color="white"/>
     </v-app-bar>
+    <v-navigation-drawer app v-model = "drawer">
+      <Sidebar :theme-color="themeColor"/>
+    </v-navigation-drawer>
     <v-main>
       <HelloWorld />
     </v-main>
@@ -22,16 +22,24 @@
 
 <script setup>
 import HelloWorld from '@/components/HelloWorld.vue';
-import { ref, onMounted } from 'vue';
+import Sidebar from '@/components/Sidebar.vue';
+import InputDialog from '@/components/InputDialog.vue';
+
+import { ref, onMounted, computed } from 'vue';
 import { fetchData } from '@/assets/js/apis';
-const title = "Singapore PR Profile Estimator";
+import { useDisplay } from 'vuetify'
+const themeColor = "teal-darken-4"
+const { width, mobile } = useDisplay()
+const title = computed( () => {
+  return mobile.value ? 'SPR Profile Estimator' : 'Singapore PR Profile Estimator'})
 const version = ref('  ');
 const getTitle = () => {
-  fetchData('version').then( (d) => {
-    const parts = d.split(" "); 
-    version.value = "  " + parts[3]; 
+  fetchData('api/version').then( (d) => {
+    version.value = "  " + d; 
   })
 }
+const drawer = ref(false)
+
 onMounted(() => {
   getTitle();
 })
@@ -41,4 +49,6 @@ onMounted(() => {
 .subclass {
   font-size: small;
 }
+
+
 </style>

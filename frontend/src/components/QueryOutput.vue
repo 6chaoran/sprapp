@@ -1,6 +1,6 @@
 <template>
     <v-row>
-        <v-col>
+        <v-col cols = 12>
             <p style="text-align: justify;">
                 Taking into account the comparable profiles, <br>
                 there is a <span :class="resultStyle">{{ (odds * 100) + '%' }}</span> possibility of
@@ -18,12 +18,17 @@
     </v-row>
 
     <v-row align="baseline">
-        <v-col>
+        <v-col cols = 8>
             <p>The 5 most similar profiles:</p>
         </v-col>
-        <v-col cols = 2>
-            <v-switch v-model="descLang" prepend-icon="mdi-translate" inset dense true-value="en" false-value="raw"
-                hint="switch language" label="EN"></v-switch>
+        <v-col :cols="2">
+            <v-switch 
+                v-model="descLang" 
+                prepend-icon="mdi-translate" 
+                inset
+                true-value="en" false-value="raw"
+                :color="color"
+                label="EN"></v-switch>
         </v-col>
 
     </v-row>
@@ -60,6 +65,7 @@ export default {
         matches: Array,
         prediction: Object,
         resultStyle: String,
+        color: String,
     },
     data() {
         return {
@@ -90,4 +96,5 @@ export default {
 .text-red {
     color: red;
 }
+
 </style>
