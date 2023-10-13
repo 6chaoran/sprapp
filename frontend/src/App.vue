@@ -31,6 +31,7 @@ import LanguageMenu from './components/LanguageMenu.vue';
 import { ref, onMounted, computed } from 'vue';
 import { fetchData } from '@/assets/js/apis';
 import { useDisplay } from 'vuetify'
+import { nextTick } from 'vue';
 
 const themeColor = "teal-darken-4"
 const { width, mobile } = useDisplay()
@@ -47,7 +48,15 @@ const lang = ref('raw')
 
 onMounted(() => {
   getTitle();
+  setTimeout(() => {
+  // Code to modify the widget's z-index here
+  const bmc = document.getElementById('bmc-wbtn');
+  if (bmc) {
+    bmc.style.zIndex = '0'; // Set the desired z-index
+  }
+}, 1000); 
 })
+
 </script>
 
 <style>

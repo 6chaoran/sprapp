@@ -11,9 +11,6 @@ const update = () => {
 const close = () => {
     dialog.value = false
 }
-const sendMessage = () => {
-
-}
 
 </script>
 
@@ -27,7 +24,7 @@ const sendMessage = () => {
         </template>
         <template v-slot:default="{ isActive }">
             <v-card>
-                <v-card-title>Search your similar profile</v-card-title>
+                <v-card-title>{{ $t('search.title') }}</v-card-title>
                 <v-card-text>
                     <QueryMatches :theme-color="themeColor"/>
                 </v-card-text>
@@ -35,7 +32,7 @@ const sendMessage = () => {
                 <v-card-actions>
                     <v-spacer></v-spacer>
                     <v-btn :color="themeColor" text @click="close">
-                        Cancel
+                        {{ $t('button.cancel') }}
                     </v-btn>
                 </v-card-actions>
             </v-card>

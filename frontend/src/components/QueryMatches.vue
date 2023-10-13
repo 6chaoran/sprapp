@@ -3,7 +3,7 @@
     <Spinner v-if="showSpinner" spinnerMessage="Query In Process ..." :themeColor="themeColor" />
     <div v-if="showOutput">
         <QueryOutput :matches="matches" :resultStyle="resultStyle" :prediction="prediction" :color="themeColor" :descLang="lang"/>
-        <Dialog class="mb-3" :theme-color="themeColor" button-text="add my record" card-text="Add Record" formType="add"
+        <Dialog class="mb-3" :theme-color="themeColor" :button-text="$t('button.add')" :card-text="$t('button.add')" formType="add"
             :desc="msg" />
     </div>
 </template>

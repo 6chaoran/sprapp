@@ -1,6 +1,6 @@
 <template>
     <v-row>
-        <v-col class = 'mx-3'><Dialog :theme-color="themeColor" button-text="Edit my record" card-text="Edit Record" formType="edit" desc="" btn-width="100%"/></v-col>
+        <v-col class = 'mx-3'><Dialog :theme-color="themeColor" :button-text="$t('button.edit')" :card-text="$t('button.edit')" formType="edit" desc="" btn-width="100%"/></v-col>
     </v-row>
     
     <v-row style="position: fixed; left: 9px; bottom: 18px; justify-content: center;"> 

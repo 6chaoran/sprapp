@@ -1,6 +1,6 @@
 <template>
     <v-row class="mt-9 mx-3">
-        <v-dialog v-model="dialog" max-width="600px">
+        <v-dialog v-model="dialog" max-width="500px" :fullscreen="true">
             <template v-slot:activator="{ attrs }">
                 <v-row>
                     <v-btn :color="themeColor" dark v-bind="attrs" @click="update" :width="btnWidth">
@@ -11,7 +11,7 @@
             <template v-slot:default="{ isActive }">
                 <v-card>
                     <v-card-title>
-                        <span class="text-h5">{{ cardText }}</span>
+                        <span class="text-h5">{{ cardText.toUpperCase() }}</span>
                     </v-card-title>
                     <v-card-text>
                         <submission-form 
@@ -24,13 +24,13 @@
                     <v-card-actions>
                         <v-spacer></v-spacer>
                         <v-btn :color="themeColor" text @click="close">
-                            Cancel
+                            {{ $t('button.cancel') }}
                         </v-btn>
                         <v-btn v-if="formType === 'edit'" :color="themeColor" text @click="saveEditRow" :disabled="!readyToSubmit">
-                            Save
+                            {{ $t('button.save') }}
                         </v-btn>
                         <v-btn v-if="formType === 'add'" :color="themeColor" text @click="saveAddRow" :disabled="!readyToSubmit">
-                            Save
+                            {{ $t('button.save') }}
                         </v-btn>
                     </v-card-actions>
                 </v-card>

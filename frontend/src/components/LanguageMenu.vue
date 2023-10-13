@@ -20,6 +20,7 @@
 <script setup>
 import { ref } from 'vue'
 import { $emit } from 'vue-happy-bus'
+import { i18n } from '@/plugins/i18n';
 
 const location = "bottom"
 const lang = ref(['raw'])
@@ -28,6 +29,7 @@ const props = defineProps({
 })
 const emit = defineEmits(['lang'])
 const emitLang = () => {
+    i18n.global.locale = lang.value[0]
     $emit('lang', lang.value[0])
 }
 const items = [

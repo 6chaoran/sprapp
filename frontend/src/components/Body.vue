@@ -8,9 +8,8 @@
 <script setup>
 import RecentRecords from './RecentRecords.vue';
 import QueryMatches from './QueryMatches.vue';
-import Dialog from './Dialog.vue';
-import { ref, computed } from 'vue';
-import { fetchData, postData } from '@/assets/js/apis'
+import { ref } from 'vue';
+import { fetchData } from '@/assets/js/apis'
 import { onMounted } from 'vue';
 import { $on } from 'vue-happy-bus'
 
@@ -32,6 +31,7 @@ const records = ref([
 ])
 
 const loading = ref(false)
+
 onMounted(async () => {
   loading.value = true
   records.value = await fetchData('api/v1/list_records');

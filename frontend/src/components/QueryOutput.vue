@@ -32,7 +32,7 @@
     <v-row no-gutters>
         <v-col cols='12'>
             <v-card v-for="(item, index) in matches" :key="index" class="mt-3" elevation="2">
-                <v-card-text>{{ descLang == 'en' ? item.desc_en : item.desc }}</v-card-text>
+                <v-card-text>{{ $i18n.locale == 'en' ? item.desc_en : item.desc }}</v-card-text>
                 <v-card-text>
                     <v-row class="px-3" style="align-items: center;">
                         <v-icon class="mr-1">mdi-calendar</v-icon>{{
@@ -66,7 +66,6 @@ export default {
     },
     data() {
         return {
-            // descLang: "raw",
             odds: this.prediction.odds,
             duration: this.prediction.duration,
             decision: this.prediction.decision,
