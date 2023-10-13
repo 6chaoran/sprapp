@@ -1,6 +1,6 @@
 import mysql.connector
 import hashlib
-from datetime import datetime
+from datetime import datetime, timedelta
 import pandas as pd
 from sqlalchemy import create_engine
 
@@ -120,7 +120,8 @@ class DB:
         if len(res) > 0 and mode == "create":
             return "user is already existed"
         
-        timestamp = datetime.now().strftime('%Y-%m-%d %T')
+        offset = timedelta(hours=8)
+        timestamp = (datetime.utcnow() + offset).strftime('%Y-%m-%d %T')  # +8 timezone offset
         update_ts = timestamp if update_ts == '' else update_ts
         id = username + '-' + update_ts
         id_hash = md5_hash(id)
@@ -163,7 +164,7 @@ class DB:
 
     def api_fetch_all(self):
         self.connect()
-        df = pd.read_sql('select id, username, description,description_en, applied_date, closed_date, duration, update_ts, status from latest order by update_ts desc limit 10;', con=self.connection)
+        df = pd.read_sql('select id, username, description,description_en, applied_date, closed_date, duration, update_ts, status from latest order by update_ts desc;', con=self.connection)
         self.connection.close()
         return df.to_dict(orient = 'records')
     

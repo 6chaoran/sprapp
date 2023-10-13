@@ -226,14 +226,14 @@ class BatchIngestor:
             self.maria.connection.commit()
             df_extraction.to_sql(tbl_name_extraction, con=self.engine, if_exists='append', index=False)
             self.maria.connection.commit()
-            if row['status'] in ['pass', 'rejected']:
+            if row['status'] in ['pass', 'rejected'] and len(str(row['description']).strip()) >= 10:
                 # upload to PineCone
                 payload = self._prepare_vectordb_row(row, res, embedding)
                 self.index.upsert([payload], namespace = 'spr')
 
     def ingest_row(self, row: pd.Series) -> None:
         description = str(row.description).strip()
-        if len(description) >= 50:
+        if len(description) >= 10:
             completions = self.parser.get_completion(row.description)
         else:
             completions = None
@@ -273,7 +273,7 @@ if __name__ == '__main__':
                 environment=PINECONE_ENVIRONMENT)
     index = pinecone.Index('spr')
 
-    uat = True
+    uat = False
 
     ingestor = BatchIngestor(parser, engine, maria, index, uat)
 
@@ -291,4 +291,6 @@ if __name__ == '__main__':
             sleep(60)
             progress_bar.set_postfix_str(f'[{row.id}]')
             ingestor.ingest_row(row)
-
+    print('update the latest table')
+    maria.update_profile_latest()
+    maria.connection.close()
