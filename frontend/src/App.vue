@@ -9,25 +9,29 @@
       </template>
       <v-app-bar-title style="flex:none;" :text = "title"><span class="subclass">{{ version }}</span> </v-app-bar-title>
       <v-spacer></v-spacer>
-      <InputDialog theme-color="white"/>
+      <LanguageMenu :theme-color="themeColor"/>
+      <InputDialog :theme-color="themeColor"/>
     </v-app-bar>
+
     <v-navigation-drawer app v-model = "drawer">
       <Sidebar :theme-color="themeColor"/>
     </v-navigation-drawer>
+    
     <v-main>
-      <HelloWorld />
+      <Body />
     </v-main>
   </v-app>
 </template>
 
 <script setup>
-import HelloWorld from '@/components/HelloWorld.vue';
+import Body from '@/components/Body.vue';
 import Sidebar from '@/components/Sidebar.vue';
 import InputDialog from '@/components/InputDialog.vue';
-
+import LanguageMenu from './components/LanguageMenu.vue';
 import { ref, onMounted, computed } from 'vue';
 import { fetchData } from '@/assets/js/apis';
 import { useDisplay } from 'vuetify'
+
 const themeColor = "teal-darken-4"
 const { width, mobile } = useDisplay()
 const title = computed( () => {
@@ -38,7 +42,8 @@ const getTitle = () => {
     version.value = "  " + d; 
   })
 }
-const drawer = ref(false)
+const drawer = ref(false) 
+const lang = ref('raw')
 
 onMounted(() => {
   getTitle();

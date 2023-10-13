@@ -1,7 +1,7 @@
 <template>
-  <HelloWorld />
+  <Body />
 </template>
 
 <script setup>
-  import HelloWorld from '@/components/HelloWorld.vue'
+  import Body from '@/components/Body.vue'
 </script>

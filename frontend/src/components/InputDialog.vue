@@ -1,6 +1,5 @@
 <script setup>
-import InputMessage from './InputMessage.vue';
-
+import QueryMatches from './QueryMatches.vue';
 import { ref } from 'vue'
 const props = defineProps({
     themeColor: String,
@@ -19,21 +18,20 @@ const sendMessage = () => {
 </script>
 
 <template>
-    <v-dialog v-model="dialog" max-width="500px">
+    <v-dialog v-model="dialog" max-width="600px">
         <template v-slot:activator="{ attrs }">
-
-            <v-btn :color="themeColor" icon dark v-bind="attrs" @click="update">
+            <v-btn color="white" icon dark v-bind="attrs" @click="update">
                 <!-- <v-icon>mdi-dots-vertical</v-icon> -->
                 <v-icon>mdi-magnify</v-icon>
-
             </v-btn>
         </template>
         <template v-slot:default="{ isActive }">
             <v-card>
+                <v-card-title>Search your similar profile</v-card-title>
                 <v-card-text>
-                    <InputMessage @data="sendMessage" />
+                    <QueryMatches :theme-color="themeColor"/>
                 </v-card-text>
-                
+
                 <v-card-actions>
                     <v-spacer></v-spacer>
                     <v-btn :color="themeColor" text @click="close">
@@ -41,7 +39,6 @@ const sendMessage = () => {
                     </v-btn>
                 </v-card-actions>
             </v-card>
-
         </template>
 
     </v-dialog>

@@ -1,9 +1,9 @@
 <template>
     <v-row class="mt-9 mx-3">
-        <v-dialog v-model="dialog" max-width="500px">
+        <v-dialog v-model="dialog" max-width="600px">
             <template v-slot:activator="{ attrs }">
                 <v-row>
-                    <v-btn :color="themeColor" dark v-bind="attrs" @click="update">
+                    <v-btn :color="themeColor" dark v-bind="attrs" @click="update" :width="btnWidth">
                         {{ buttonText }}
                     </v-btn>
                 </v-row>
@@ -44,16 +44,19 @@
 import { ref } from 'vue';
 import SubmissionForm from './SubmissionForm.vue';
 import { postData } from '@/assets/js/apis';
+import { $emit } from 'vue-happy-bus';
+
 const props = defineProps({
     themeColor: String,
     buttonText: String,
     cardText: String,
     formType: String,
     desc: String,
+    btnWidth: String,
 })
 
 const emit = defineEmits([
-    'edited-item'
+    'add-item', 'edit-item'
 ])
 
 const dialog = ref(false);
@@ -79,7 +82,7 @@ const ingestToPineCone = async () => {
     if (editedItem.value.status == "pending") {
         console.log("pending result => skip ingestion")
     } else {
-        const now = (new Date(Date.now() - (new Date()).getTimezoneOffset() * 60000)).toISOString().substr(0, 10)
+        const now = (new Date(Date.now() - (new Date()).getTimezoneOffset() * 60000)).toISOString().substr(0, 19)
         postData('api/v1/ingest', {
                 username: editedItem.value.username,
                 text: editedItem.value.description,
@@ -108,17 +111,19 @@ const saveAddRow = () => {
     }).then((data) => {
         console.log("adding record to db");
         console.log(data);
-        if (data != "ok") {
-            window.alert(data)
-        } else {
+        if (data === "ok") {
            close()
-           emit('edited-item', editedItem.value)
+           const update_ts = (new Date(Date.now() - (new Date()).getTimezoneOffset() * 60000)).toISOString().substr(0, 19)
+           editedItem.value['update_ts'] = update_ts
+           $emit('add-item', editedItem.value)
            ingestToPineCone()
            sendEmail()
+        } else {
+           window.alert(data)
         }
 
     }).catch(e => { }).finally(() => { })
-    dialog.value = false;
+
 }
 
 const saveEditRow = () => {
@@ -133,16 +138,18 @@ const saveEditRow = () => {
     }).then((data) => {
         console.log("edit record in db");
         console.log(data);
-        if (data != "ok") {
-            window.alert(data)
-        } else {
+        if (data === "ok") {
            close()
-           emit('edited-item', editedItem.value)
+           const update_ts = (new Date(Date.now() - (new Date()).getTimezoneOffset() * 60000)).toISOString().substr(0, 19)
+           editedItem.value['update_ts'] = update_ts
+           $emit('edit-item', editedItem.value)
            ingestToPineCone()
+        } else {
+            window.alert(data)
         }
 
     }).catch(e => { }).finally(() => { })
-    dialog.value = false;
+    
 }
 
 
