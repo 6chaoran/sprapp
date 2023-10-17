@@ -131,7 +131,7 @@ class BatchIngestor:
         out = io.BytesIO(blob)
         out.seek(0)
 
-        return numpy.load(out)
+        return numpy.load(out, allow_pickle=True)
 
     @staticmethod
     def get_duration(applied_date, closed_date) -> int:

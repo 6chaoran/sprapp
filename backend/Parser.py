@@ -1,8 +1,10 @@
 import os
 import openai
+from openai.openai_object import OpenAIObject
 openai.organization = "org-oX197NfzZZrGOsEII4Wq3qBh"
 openai.api_key =os.getenv("OPENAI_API_KEY") 
-
+import io
+import numpy
 from pathlib import Path
 import pandas as pd
 from tqdm.autonotebook import tqdm
@@ -155,3 +157,34 @@ Text:\"\"\"{text.strip()}\"\"\""""
                 print(json_file)
             all_res += [res]
         return pd.DataFrame(all_res)
+    
+    @staticmethod
+    def completion_to_dict(completion: OpenAIObject) -> dict:
+        try:
+            res = json.loads(completion.choices[0].message.content, strict = False)
+        except:
+            res = {'english_translation': 'Apologies, something wrong with the translation', 
+                'extraction': {}}
+        return res
+    
+    @staticmethod
+    def adapt_array(array):
+        """
+        Using the numpy.save function to save a binary version of the array,
+        and BytesIO to catch the stream of data and convert it into a BLOB.
+        """
+        out = io.BytesIO()
+        numpy.save(out, array)
+        out.seek(0)
+
+        return out.read()
+    
+    @staticmethod
+    def convert_array(blob):
+        """
+        Using BytesIO to convert the binary version of the array back into a numpy array.
+        """
+        out = io.BytesIO(blob)
+        out.seek(0)
+
+        return numpy.load(out, allow_pickle=True)
