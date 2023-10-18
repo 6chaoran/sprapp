@@ -226,10 +226,10 @@ class DB:
         extraction_slim = {k:v for k,v in extraction.items() if v is not None}
         if len(extraction_slim) > 0:
             cols = ", ".join(extraction_slim.keys())
-            values = ", ".join([self.escape_string(i) for i in extraction_slim.values()])
+            values = ", ".join([f"'{self.escape_string(str(i))}'" for i in extraction_slim.values()])
             sql = f"""insert into extraction (id, {cols})
                 values (
-                    '{self.escape_string(id)}',  '{values}'
+                    '{self.escape_string(id)}',  {values}
                 );
                 """
             self.execute_sql(sql)

@@ -76,8 +76,12 @@ def api_get_matches2(text:str) -> Matches:
 @app.post("/api/v2/add_record")
 def api_add_record2(username:str, password:str, text: str, email: str, status: str, applied_date:str, closed_date:str)  -> AddStatus:
     msg = supabase.add_row(username, password, email, status, text, applied_date, closed_date, mode="create", tablename='profile')
-    _ = supabase.add_row(username, password, email, status, text, applied_date, closed_date, mode="create", tablename='latest')
     return msg
+
+@app.get("/api/v2/update_profile_latest")
+def update_profile_latest() -> CRUDStatus:
+    supabase.update_profile_latest()
+    return {'status': 'ok'}
 
 
 @app.put("/api/v2/ingest")
@@ -89,6 +93,7 @@ def ingest2(id, text) -> CRUDStatus:
     description_en = compl_dict.get('english_translation', 'Apologies, something wrong with the translation')
     supabase.update_completion(id, emb, description_en)
     supabase.upload_extraction(id, extraction)
+    supabase.update_profile_latest()
     return {'status': 'ok'}
 
 @app.put("/api/v2/edit_record")

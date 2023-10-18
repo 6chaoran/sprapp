@@ -15,6 +15,7 @@ class PRSpider(scrapy.Spider):
         self.dest_dir = Path(f'../extract/pr')
         if self.dest_dir.exists:
             shutil.rmtree(self.dest_dir)
+            self.dest_dir.mkdir(parents=True, exist_ok=True)
 
     def start_requests(self):
 
