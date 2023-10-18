@@ -22,6 +22,8 @@ class DB:
         self.connection = psycopg.connect(f'postgresql://{self.user}:{self.password}@{self.host}:{self.port}/postgres', autocommit=True)
         # print(self.connection.get_server_info())
         self.connection.close()
+        self.record_cols = ['id','username', 'email', 'description', 'description_en','applied_date', 'closed_date', 'update_ts','status', 'duration']
+        self.record_cols_string = ', '.join(self.record_cols)
 
     @staticmethod
     def add_cols(db_out: list, cols: list):
@@ -32,11 +34,10 @@ class DB:
             self.connection = psycopg.connect(f'postgresql://{self.user}:{self.password}@{self.host}:{self.port}/postgres', autocommit=True)
         
     def initdb(self, uat = False) -> bool:
-        self.connect()
-        cursor = self.connection.cursor()
+        
         tablename = 'uat_profile' if uat else 'profile'
-        cursor.execute(f"drop table if exists {tablename};")
-        cursor.execute(f"""
+        self.execute_sql(f"drop table if exists {tablename};")
+        sql = f"""
         create table {tablename} 
             (
             id TEXT NOT NULL,
@@ -54,10 +55,12 @@ class DB:
             status TEXT NOT NULL,
             timestamp TIMESTAMP NOT NULL
             );
-            """)
+            """
+        self.execute_sql(sql)
         extraction_tbl_name = 'uat_extraction' if uat else 'extraction'
-        cursor.execute(f"drop table if exists {extraction_tbl_name};")
-        cursor.execute(f"""
+
+        self.execute_sql(f"drop table if exists {extraction_tbl_name};")
+        sql = f"""
         create table {extraction_tbl_name}
             (
             id TEXT NOT NULL,
@@ -74,8 +77,8 @@ class DB:
             years_work TEXT,
             timestamp DATETIME NOT NULL        
             );
-            """)
-        self.connection.commit()
+            """
+        self.execute_sql(sql)
         return True
     
     @staticmethod
@@ -104,21 +107,16 @@ class DB:
     
     def check_user_exist(self, username) -> bool:
         username = self.escape_string(username)
-        self.connect()
-        cursor = self.connection.cursor()
-        cursor.execute(f"select * from profile where username = '{username}'")
-        res = cursor.fetchall()
+        res = self.execute_sql(f"select * from profile where username = '{username}'", return_result=True)
         if len(res) > 0 :
             return True
         return False
     
-    def add_row(self, username, password, email, status, description, applied_date, closed_date, mode="create", update_ts = '', tablename = 'profile') -> str:
-        self.connect()
-        cursor = self.connection.cursor()
+    def add_row(self, username, password, email, status, description, applied_date, closed_date, mode="create", update_ts = '', tablename = 'profile') -> dict:
+  
         sql = f"select * from {tablename} where username = '{self.escape_string(username)}'"
         # print(sql)
-        cursor.execute(sql)
-        res = cursor.fetchall()
+        res = self.execute_sql(sql, return_result=True)
         if len(res) > 0 and mode == "create":
             return {'status': "user is already existed"}
         
@@ -128,62 +126,74 @@ class DB:
         id = username + '-' + update_ts
         id_hash = md5_hash(id)
         duration = self.get_duration(applied_date, closed_date)
-        # description_en = ''
+        description_en = ''
         # embedding = ''
 
-        sql = f"""INSERT INTO {tablename} (id, id_hash, username, password, email, description, applied_date, closed_date, 
+        sql = f"""INSERT INTO {tablename} (id, id_hash, username, password, email, description, description_en, applied_date, closed_date, 
                     duration, update_ts, status, timestamp) 
                        VALUES (
                        \'{self.escape_string(id)}\', \'{id_hash}\',
                        \'{self.escape_string(username)}\', \'{password}\', 
-                       \'{email}\', \'{self.escape_string(description)}\',  \'{applied_date}\',  \'{closed_date}\', 
+                       \'{email}\', \'{self.escape_string(description)}\', '{description_en}' ,\'{applied_date}\',  \'{closed_date}\', 
                        \'{duration}\',  
                        \'{update_ts}\', \'{status}\', \'{timestamp}\');
                        """
         # print(sql)
-        cursor.execute(sql)
-        self.connection.commit()
-        self.connection.close()
+        self.execute_sql(sql)
         return {'status':'ok', 'id': id}
     
+    def update_record(self, id, status, description, applied_date, closed_date,  update_ts = '', tablename = 'profile') -> dict:
+        sql = f"""update {tablename} 
+        set status = '{status}', 
+        description = '{description}',
+        applied_date = '{applied_date}',
+        closed_date = '{closed_date}',
+        update_ts = '{update_ts},'
+        description_en = '',
+        embedding = ''
+        where id = '{id}';
+        """
+        self.execute_sql(sql)
+        return {'status': 'ok'}
         
     def verify_user(self, username, password) -> dict:
-        self.connect()
-        cursor = self.connection.cursor()
-        cursor.execute(f"""
-                       select username, email, description, applied_date, closed_date, status from profile 
-                       where username = \'{self.escape_string(username)}\' and password = \'{password}\'
-                       order by timestamp desc
-                       limit 1;
-                       """)
-        columns=['username', 'email', 'description', 'applied_date', 'closed_date', 'status']
-        res = cursor.fetchall()
+        sql = f"""
+        select {self.record_cols_string} from profile 
+        where username = \'{self.escape_string(username)}\' and password = \'{password}\'
+        order by timestamp desc
+        limit 1;
+        """
+        res = self.execute_sql(sql, return_result=True)
+        res = self.add_cols(res, self.record_cols)
         if len(res) > 0:
-            out = [dict(zip(columns, o)) for o in res][0]
-            return out
-        return {}
+            return  {'status': 'ok', 'record':res[0]}
+        return {'status': 'wrong username and passowrd combination'}
     
-        
     def api_fetch_all(self) -> list:
-        self.connect()
-        sql = 'select id, username, description,description_en, applied_date, closed_date, duration, update_ts, status from latest order by update_ts desc;'
-        cur = self.connection.cursor()
-        cur.execute(sql)
-        cols = ['id', 'username', 'description','description_en', 'applied_date', 'closed_date', 'duration', 'update_ts', 'status']
-        out = cur.fetchall()
-        self.connection.close()
-        if len(out) > 0:
-            out = [dict(zip(cols, o)) for o in out]
-        else:
-            out = []
+        sql = f'select {self.record_cols_string} from latest order by update_ts desc;'
+        out = self.execute_sql(sql, return_result=True)
+        out = self.add_cols(out, self.record_cols)
         return out
     
-
-    def update_profile_latest(self):
+    def execute_sql(self, sql, return_result = False) -> list:
         self.connect()
         c = self.connection.cursor()
-        c.execute('drop table if exists latest;')
+        c.execute(sql)
         self.connection.commit()
+        if return_result:
+            return c.fetchall()
+        else:
+            return []
+    
+    def list_user_records(self, username) -> list[dict]:
+
+        sql = f"""select {self.record_cols_string} from profile where username = '{self.escape_string(username)}'"""
+        res = self.execute_sql(sql, return_result=True)
+        res = self.add_cols(res, self.record_cols)
+        return res
+
+    def update_profile_latest(self):     
+        self.execute_sql('drop table if exists latest;')
         sql = """
         create table latest as
         (
@@ -196,29 +206,23 @@ class DB:
         limit 20
         );
         """
-        c.execute(sql)
-        self.connection.commit()
+        self.execute_sql(sql)
         self.connection.close()
 
     def get_similar_from_embedding(self, emb: list[float]) -> list:
-        self.connect()
+        cols = self.record_cols + ['distance']
         sql = f"""select 
-id, username, description, description_en, status, applied_date, closed_date, duration,
-embedding <=> '{emb}' as distance
-from profile
-where status in ('pass', 'rejected') and duration > 0
-order by embedding <=> '{emb}'
-limit 5;
-"""
-        cols = ['id', 'username', 'description', 'description_en', 'status', 'applied_date', 'closed_date', 'duration', 'distance']
-        cur = self.connection.cursor()
-        cur.execute(sql)
-        res = cur.fetchall()
-        self.connection.commit()
+        {self.record_cols_string},
+        embedding <=> '{emb}' as distance
+        from profile
+        where status in ('pass', 'rejected') and duration > 0
+        order by embedding <=> '{emb}'
+        limit 5;
+        """
+        res = self.execute_sql(sql, return_result=True)
         return self.add_cols(res, cols)
     
-    def upload_extraction(self, id: str, extraction: dict) -> None:
-        
+    def upload_extraction(self, id: str, extraction: dict) -> None: 
         extraction_slim = {k:v for k,v in extraction.items() if v is not None}
         if len(extraction_slim) > 0:
             cols = ", ".join(extraction_slim.keys())
@@ -228,23 +232,19 @@ limit 5;
                     '{self.escape_string(id)}',  '{values}'
                 );
                 """
-            self.connect()
-            c = self.connection.cursor()
-            c.execute(sql)
-            self.connection.commit()
+            self.execute_sql(sql)
 
     def update_completion(self, id: str, emb: list, description_en: str):
-        
         sql = f"update profile set embedding = '{emb}', description_en = '{self.escape_string(description_en)}' where id = '{self.escape_string(id)}';"
         # print(sql)
-        self.connect()
-        c = self.connection.cursor()
-        c.execute(sql)
-        self.connection.commit()
+        self.execute_sql(sql)
+        return True
 
-    def delete_record(self, id):
-        sql = f"delete from profile where id = '{self.escape_string(id)}';"
-        self.connect()
-        c = self.connection.cursor()
-        c.execute(sql)
-        self.connection.commit()
+    def delete_records(self, ids: list[str]) -> bool:
+        ids = [f"'{self.escape_string(i)}'" for i in ids]
+        id_string = f"({', '.join(ids)})"
+        sql = f"delete from profile where id in {id_string};"
+        self.execute_sql(sql)
+        sql = f"delete from latest where id in {id_string};"
+        self.execute_sql(sql)
+        return True

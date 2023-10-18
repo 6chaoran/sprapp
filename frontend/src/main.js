@@ -22,5 +22,6 @@ const app = createApp(App, {
         return { t } // return render context that included `t`
       }
 })
+
 registerPlugins(app)
 app.mount('#app')

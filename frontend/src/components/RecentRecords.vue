@@ -1,13 +1,13 @@
 <template>
-
   <v-row class="mt-6">
     <v-col>
       {{ $t('recent_records') }}
-
     </v-col>
   </v-row>
-  <v-row v-if = 'loading'> 
-    <v-col>Loading records ...</v-col>
+  <v-row v-if="loading"> 
+    <v-col>Loading records ...
+      <v-progress-linear indeterminate :color="themeColor"></v-progress-linear>
+    </v-col>
   </v-row>
   <v-row>
     <v-col>
@@ -45,7 +45,8 @@ import { computed } from 'vue';
 
 const props = defineProps({
   records: Array,
-  loading: Boolean
+  loading: Boolean,
+  themeColor: String,
 })
 const statusIconColor = (x) => {
   let colors = {
@@ -60,7 +61,9 @@ $on('lang', (x) => {
 
 const recordsFiltered = computed(() => {
   if (lang.value == 'en'){
-    return props.records.filter(elm => elm.description_en.length > 0 && elm.description != elm.description_en)
+    
+    const elms = props.records.filter(elm => elm.description_en != null)
+    return elms.filter(elm => elm.description_en.length > 0 && elm.description != elm.description_en)
   } else {
     return props.records
   }

@@ -1,7 +1,7 @@
 <template>
   <v-container>
     <QueryMatches :theme-color="themeColor"/>
-    <RecentRecords :records="records" :loading="loading"/>
+    <RecentRecords :records="records" :loading="loading" :theme-color="themeColor"/>
   </v-container>
 </template>
 
@@ -34,7 +34,8 @@ const loading = ref(false)
 
 onMounted(async () => {
   loading.value = true
-  records.value = await fetchData('api/v1/list_records');
+  records.value = await fetchData('/list_records');
+  // console.log(records.value)
   loading.value = false
 })
 </script>

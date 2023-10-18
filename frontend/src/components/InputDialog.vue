@@ -1,6 +1,8 @@
 <script setup>
 import QueryMatches from './QueryMatches.vue';
 import { ref } from 'vue'
+import { useDisplay } from 'vuetify'
+const { width, mobile } = useDisplay()
 const props = defineProps({
     themeColor: String,
 })
@@ -15,7 +17,7 @@ const close = () => {
 </script>
 
 <template>
-    <v-dialog v-model="dialog" max-width="600px">
+    <v-dialog v-model="dialog" max-width="600px" :fullscreen="mobile">
         <template v-slot:activator="{ attrs }">
             <v-btn color="white" icon dark v-bind="attrs" @click="update">
                 <!-- <v-icon>mdi-dots-vertical</v-icon> -->
@@ -24,12 +26,12 @@ const close = () => {
         </template>
         <template v-slot:default="{ isActive }">
             <v-card>
-                <v-card-title>{{ $t('search.title') }}</v-card-title>
+                <v-card-title class="mt-3">{{ $t('search.title') }}</v-card-title>
                 <v-card-text>
-                    <QueryMatches :theme-color="themeColor"/>
+                    <QueryMatches :theme-color="themeColor" />
                 </v-card-text>
 
-                <v-card-actions>
+                <v-card-actions class="mb-12">
                     <v-spacer></v-spacer>
                     <v-btn :color="themeColor" text @click="close">
                         {{ $t('button.cancel') }}

@@ -1,5 +1,5 @@
 <script setup>
-import { fetchData, postData } from '@/assets/js/apis';
+import { fetchData } from '@/assets/js/apis';
 import { onMounted } from 'vue';
 import { ref, watch } from 'vue'
 const props = defineProps({
@@ -13,10 +13,15 @@ const emit = defineEmits([
 ])
 const editFormValid = ref(null);
 const userVerified = ref(false);
+const userNotExist = ref(false)
 
 if (props.formType === 'add'){
-    watch([editFormValid], () => {
-        emit('ready-to-submit', editFormValid.value)
+    watch([editFormValid, userNotExist], () => {
+        emit('ready-to-submit', editFormValid.value && userNotExist.value)
+    })
+} else if (props.formType === 'del'){
+    watch([userVerified], () => {
+        emit('ready-to-submit', userVerified.value)
     })
 } else {
     watch([editFormValid, userVerified], () => {
@@ -25,6 +30,7 @@ if (props.formType === 'add'){
 }
 
 const editedItem = ref({
+    id: '',
     username: '',
     password: '',
     description: props.desc,
@@ -47,17 +53,32 @@ const rules = {
     },
 }
 
+const checkUserExist = () => {
+    fetchData('/check_user_exist', {
+        username: editedItem.value.username
+    }).then( resp => {
+        if(resp.exist){
+            window.alert(`user ${resp.username} already exists`)
+            userNotExist.value = false
+        } else {
+            userNotExist.value = true
+        }
+    })
+}
+
 const verifyUser = () => {
-    postData('api/v1/verify_user', {
+    fetchData('/verify_user', {
         username: editedItem.value.username,
         password: editedItem.value.password
     }).then(resp => {
-        if (resp) {
-            editedItem.value.email = resp['email']
-            editedItem.value.description = resp['description']
-            editedItem.value.applied_date = resp['applied_date']
-            editedItem.value.closed_date = resp['closed_date']
-            editedItem.value.status = resp['status']
+        if (resp.status === 'ok') {
+            const record = resp.record
+            editedItem.value.id = record['id']
+            editedItem.value.email = record['email']
+            editedItem.value.description = record['description']
+            editedItem.value.applied_date = record['applied_date']
+            editedItem.value.closed_date = record['closed_date']
+            editedItem.value.status = record['status']
             userVerified.value = true
         } else {
             window.alert("Invalid username and password combination")
@@ -75,9 +96,16 @@ const verifyUser = () => {
                 Please provide a valid email to recieve a reminder to update your
                 status. 
             </v-row>
-            <v-row>
-                <v-text-field :variant="formVariant" :disabled="userVerified" label="User Name"
+            <v-row align="center">
+                <v-col cols="8" class="px-0">
+                    <v-text-field :variant="formVariant" :disabled="userVerified || userNotExist" label="User Name"
                     v-model="editedItem.username" :rules="[rules.required]"></v-text-field>
+                </v-col>
+                <v-col cols='4' v-if="formType == 'add'">
+                    <v-icon v-if="userNotExist" color="green">mdi-checkbox-marked-circle</v-icon>
+                    <v-btn v-if="!userNotExist" rounded @click="checkUserExist" :color="themeColor" variant="text" :disabled="editedItem.username.length <=0">check</v-btn>
+                </v-col>
+
             </v-row>
             <v-row align="center">
                 <v-col cols='8' class="px-0">
@@ -86,11 +114,12 @@ const verifyUser = () => {
                         hint="used for editing your record, can be as simple as your DOB in form of mmdd" type="password"
                         :rules="[rules.required]"></v-text-field>
                 </v-col>
-                <v-col cols='2' v-if="formType == 'edit'">
+                <v-col cols='2' v-if="formType == 'edit' || formType == 'del'">
                     <v-btn 
                         :disabled="userVerified" 
                         rounded
                         @click="verifyUser" 
+                        variant="text"
                         :color="themeColor">verify</v-btn>
                 </v-col>
             </v-row>
