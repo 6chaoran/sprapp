@@ -100,10 +100,9 @@ class DB:
             duration = -1
         return duration
     
-
     @staticmethod
     def escape_string(x: str) -> str:
-        return x.replace("'", "\\'")
+        return str(x).replace("'", "''")
     
     def check_user_exist(self, username) -> bool:
         username = self.escape_string(username)
@@ -175,7 +174,11 @@ class DB:
         out = self.add_cols(out, self.record_cols)
         return out
     
+    def convert_null(self, sql: str) -> str:
+        return sql.replace("'None'", "NULL")
+    
     def execute_sql(self, sql, return_result = False) -> list:
+        sql = self.convert_null(sql)
         self.connect()
         c = self.connection.cursor()
         c.execute(sql)
@@ -235,7 +238,9 @@ class DB:
             self.execute_sql(sql)
 
     def update_completion(self, id: str, emb: list, description_en: str):
-        sql = f"update profile set embedding = '{emb}', description_en = '{self.escape_string(description_en)}' where id = '{self.escape_string(id)}';"
+        description_en = self.escape_string(description_en)
+        id_ = self.escape_string(id)
+        sql = f"update profile set embedding = '{emb}', description_en = '{description_en}' where id = '{id_}';"
         # print(sql)
         self.execute_sql(sql)
         return True

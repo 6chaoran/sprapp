@@ -105,6 +105,11 @@ def ingest(id, text):
 if __name__ == "__main__":
 
     df_delta = get_df_delta()
+
+    if len(df_delta) == 0:
+        print("Now new records, skip")
+        exit(0)
+
     progress_bar = tqdm(range(len(df_delta)), desc='ingesting', unit='record')
     for i in progress_bar:
         row = df_delta.iloc[i]
