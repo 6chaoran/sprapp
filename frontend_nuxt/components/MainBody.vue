@@ -1,0 +1,38 @@
+<template>
+  <v-container>
+    <QueryMatches :theme-color="themeColor"/>
+    <RecentRecords :records="records" :loading="loading" :theme-color="themeColor"/>
+  </v-container>
+</template>
+
+<script setup>
+
+import { $on } from 'vue-happy-bus'
+import { fetchData } from '~/server/api';
+
+$on('edit-item', (editedItem) => {
+  console.log(editedItem)
+  records.value.unshift(editedItem)
+})
+
+$on('add-item', (editedItem) => {
+  console.log(editedItem)
+  records.value.unshift(editedItem)
+})
+
+const themeColor = "teal-darken-4";
+
+const records = ref([
+  // {username: 'user', datetime: '2023-01-01', description: 'pass', applied_date:'2023-01-01', closed_date: '2023-09-01', status: 'rejected', update_ts: '2023-01-01'},
+  // {username: 'user', datetime: '2023-01-01', description: 'pass', applied_date:'2023-01-01', closed_date: '2023-09-01', status: 'pass', update_ts: '2023-02-01'}
+])
+
+const loading = ref(false)
+
+onMounted(async () => {
+  loading.value = true
+  records.value = await fetchData('/list_records');
+  console.log(records.value)
+  loading.value = false
+})
+</script>
