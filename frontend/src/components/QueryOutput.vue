@@ -26,6 +26,18 @@ import { i18n } from '@/plugins/i18n';
 onBeforeMount(() => {
     descLang.value = i18n.global.locale
 })
+const convertStatusLocale = (status) => {
+  const statusMap = {
+    pass: "通过",
+    pending: "等待",
+    rejected: "杯具"
+  }
+  if(i18n.global.locale === 'zh'){
+    return statusMap[status]
+  } else {
+    return status
+  }
+}
 </script>
 <template>
    
@@ -75,7 +87,10 @@ onBeforeMount(() => {
                             <v-avatar left v-if="item.status == 'pass'">
                                 <v-icon color="green">mdi-checkbox-marked-circle</v-icon>
                             </v-avatar>
-                            {{ item.status }}
+                            <v-avatar left v-if="item.status == 'rejected'">
+                                <v-icon color="green">mdi-checkbox-close</v-icon>
+                            </v-avatar>
+                            {{ convertStatusLocale(item.status) }}
                         </v-chip>
                     </v-row>
                 </v-card-text>

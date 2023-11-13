@@ -1,5 +1,5 @@
 <template>
-  <v-container>
+  <v-container class="px-0">
     <QueryMatches :theme-color="themeColor"/>
     <RecentRecords :records="records" :loading="loading" :theme-color="themeColor"/>
   </v-container>

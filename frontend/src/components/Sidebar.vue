@@ -1,7 +1,7 @@
 <template>
     <v-row>
         <v-col class="ma-3 mb-9">
-            Actions:
+            {{ $t('button.action') }}
             <v-row class="mb-3 mx-3">
                 <Dialog :theme-color="themeColor" :button-text="$t('button.edit')" :card-text="$t('button.edit')"
                     formType="edit" desc="" btn-width="100%" />
@@ -20,7 +20,7 @@
     </v-row>
     <v-row>
         <v-col class="mx-3">
-            Useful Links:
+            {{ $t('links.useful') }}
             <v-list>
                 <v-list-item v-for="(item, id) in usefulLinks" :key="id">
                     <v-btn variant="text" :href="item.url" target="_blank"><v-icon class="mr-3" :color="themeColor">{{
@@ -43,17 +43,21 @@
 </template>
 
 <script setup>
+import { i18n } from '@/plugins/i18n';
+import { ref } from 'vue'
 import Dialog from './Dialog.vue';
+import { watch } from 'vue';
 const props = defineProps({
     themeColor: String
 })
 
-const usefulLinks = [
+const usefulLinks = ref([
     {
         url: 'https://www.ica.gov.sg/reside/PR/apply',
         title: 'ICA PR Website',
         icon: 'mdi-flag'
     }
-]
+])
+
 
 </script>

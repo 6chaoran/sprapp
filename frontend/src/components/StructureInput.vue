@@ -3,14 +3,14 @@
         <template v-slot:activator="{ attrs }">
             <v-row>
                 <v-btn :color="themeColor" dark v-bind="attrs" @click="update" variant='text'>
-                    Lazy typing ? <p style="font-size: 2rem">😜</p>
+                    {{ $t('button.lazy') }} <p style="font-size: 2rem">😜</p>
                 </v-btn>
             </v-row>
         </template>
         <template v-slot:default="{ isActive }">
             <v-card>
                 <v-card-title>
-                    <span class="text-h5">Choose Your Profile</span>
+                    <span class="text-h5">{{ $t('form.title') }}</span>
                 </v-card-title>
                 <v-card-text>
                     <v-form>
@@ -60,6 +60,7 @@ const save = () => {
 const close = () => {
     dialog.value = false
 }
+
 
 const profileMsg = computed( () => {
     const age = items.value[0].selected
@@ -134,4 +135,5 @@ const items = ref([
         selected: ''    
     },
 ])
+
 </script>

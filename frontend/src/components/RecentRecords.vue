@@ -10,7 +10,7 @@
     </v-col>
   </v-row>
   <v-row>
-    <v-col>
+    <v-col class="px-0">
       <v-card v-for="data in recordsFiltered" :key="data.id" class="my-3" min-height="30px" elevation="2">
         <v-card-text>
           <v-row class="mx-1">
@@ -29,20 +29,37 @@
               <v-avatar left v-if="data.status == 'pass'">
                 <v-icon :color="statusIconColor(data.status)">mdi-checkbox-marked-circle</v-icon>
               </v-avatar>
-              {{ data.status }}</v-chip></v-row>
+              <v-avatar left v-if="data.status == 'rejected' && i18n.global.locale === 'zh'">
+                <v-icon :color="statusIconColor(data.status)">mdi-close-circle</v-icon>
+              </v-avatar>
+              <v-avatar left v-if="data.status === 'pending' && i18n.global.locale === 'zh'">
+                <v-icon :color="statusIconColor(data.status)">mdi-timelapse</v-icon>
+              </v-avatar>
+              {{ convertStatusLocale(data.status) }}</v-chip></v-row>
+              
+          <v-divider class="mt-6 mb-3"></v-divider>
+          <v-row class="px-3" justify="end" align="center">
+            <p v-if="data.duration > 0">waited for {{ (data.duration/30).toFixed(1) }} months</p>
+            <v-spacer></v-spacer>
+              <v-btn variant="text" size="small" icon="mdi-file-document-edit-outline" @click="openEditForm(data)"> </v-btn>
+              <v-btn variant="text" size="small" icon="mdi-trash-can-outline" @click="openDelForm(data)"></v-btn>
+          </v-row>
 
         </v-card-text>
 
       </v-card>
+      <Dialog2 :theme-color="themeColor"></Dialog2>
+      
     </v-col>
   </v-row>
 </template>
 
 <script setup>
-import { $on } from 'vue-happy-bus'
+import { $emit, $on } from 'vue-happy-bus'
 import { ref } from 'vue'
 import { computed } from 'vue';
-
+import { i18n } from '@/plugins/i18n';
+import Dialog2 from './Dialog2.vue';
 const props = defineProps({
   records: Array,
   loading: Boolean,
@@ -61,12 +78,32 @@ $on('lang', (x) => {
 
 const recordsFiltered = computed(() => {
   if (lang.value == 'en'){
-    
     const elms = props.records.filter(elm => elm.description_en != null)
     return elms.filter(elm => elm.description_en.length > 0 && elm.description != elm.description_en)
   } else {
     return props.records
   }
 })
+
+const convertStatusLocale = (status) => {
+  const statusMap = {
+    pass: "通过",
+    pending: "等待",
+    rejected: "杯具"
+  }
+  if(i18n.global.locale === 'zh'){
+    return statusMap[status]
+  } else {
+    return status
+  }
+}
+
+const openEditForm = (data) => {
+  $emit('editForm', data.username)
+}
+
+const openDelForm = (data) => {
+  $emit('delForm', data.username)
+}
 </script>
 

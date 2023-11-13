@@ -1,7 +1,7 @@
 <script setup>
-import QueryMatches from './QueryMatches.vue';
 import { ref } from 'vue'
 import { useDisplay } from 'vuetify'
+import QueryMatches from './QueryMatches.vue';
 const { width, mobile } = useDisplay()
 const props = defineProps({
     themeColor: String,
@@ -13,7 +13,6 @@ const update = () => {
 const close = () => {
     dialog.value = false
 }
-
 </script>
 
 <template>

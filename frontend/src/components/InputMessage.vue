@@ -17,6 +17,8 @@
 import { ref } from 'vue'
 import StructureInput from './StructureInput.vue';
 import { $on } from 'vue-happy-bus';
+import { logEvent } from 'firebase/analytics';
+import { analytics } from '@/plugins/firebase';
 const showLazyTyping = ref(false)
 const message = ref(null)
 const emit = defineEmits(['data'])
@@ -25,6 +27,9 @@ const props = defineProps({
 }) 
 const sendMessage = () => {
     emit('data', message.value);
+    logEvent(analytics, 'search', {
+        profile: message.value
+    })
 }
 const clearMessage = () => {
     message.value = null

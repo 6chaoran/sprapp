@@ -6,6 +6,7 @@ const props = defineProps({
     themeColor: String,
     formType: String, // add | edit
     desc: String,
+    username: String
 })
 const emit = defineEmits([
     'ready-to-submit', 
@@ -31,7 +32,7 @@ if (props.formType === 'add'){
 
 const editedItem = ref({
     id: '',
-    username: '',
+    username: props.username,
     password: '',
     description: props.desc,
     status: 'pending',
