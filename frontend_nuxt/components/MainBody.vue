@@ -1,14 +1,17 @@
 <template>
-  <v-container>
+  <v-container class="px-0">
     <QueryMatches :theme-color="themeColor"/>
+    <v-btn :color="themeColor" rounded @click="$emit('open-insight-dialog')">{{ $t('button.insight') }}</v-btn>
+    <InsightDialog />
     <RecentRecords :records="records" :loading="loading" :theme-color="themeColor"/>
   </v-container>
 </template>
 
 <script setup>
 
-import { $on } from 'vue-happy-bus'
+import { $on,$emit } from 'vue-happy-bus'
 import { fetchData } from '~/server/api';
+import InsightDialog from '~/components/Dialogs/InsightsDialog.vue';
 
 $on('edit-item', (editedItem) => {
   console.log(editedItem)
@@ -32,7 +35,7 @@ const loading = ref(false)
 onMounted(async () => {
   loading.value = true
   records.value = await fetchData('/list_records');
-  console.log(records.value)
+  // console.log(records.value)
   loading.value = false
 })
 </script>

@@ -43,8 +43,7 @@ origins = [
     "http://6chaoran.github.io",
     "https://6chaoran.github.io",
     "https://sgprapp.web.app",  # firebase
-    "http://frontend-dot-sgprapp.et.r.appspot.com",
-    "https://frontend-dot-sgprapp.et.r.appspot.com"
+    "https://sprapp.vercel.app", # vercel
 ]
 app.add_middleware(
     CORSMiddleware,

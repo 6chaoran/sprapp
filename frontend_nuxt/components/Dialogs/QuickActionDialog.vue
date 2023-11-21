@@ -7,7 +7,7 @@
                 <span class="text-h5">{{ cardText.toUpperCase() }}</span>
             </v-card-title>
             <v-card-text>
-                <submission-form :formType="formType" :themeColor="themeColor" :desc="desc" @edited-item="updateEditedItem"
+                <QuickActionForm :formType="formType" :themeColor="themeColor" :desc="desc" @edited-item="updateEditedItem"
                     @ready-to-submit="checkFormReadiness" :username="username"/>
             </v-card-text>
             <v-card-actions class="mb-12">
@@ -30,11 +30,12 @@
 </template>
 <script setup>
 import { ref } from 'vue';
-import SubmissionForm from './SubmissionForm.vue';
-import { delData, postData, putData } from '@/assets/js/apis';
+// import SubmissionForm from './SubmissionForm.vue';
+import QuickActionForm from '~/components/Forms/QuickActionForm.vue';
+import { delData, postData, putData } from '~/server/api';
 import { $emit, $on } from 'vue-happy-bus';
 import { useDisplay } from 'vuetify'
-import { i18n } from '@/plugins/i18n';
+const { locale, setLocale, t } = useI18n()
 const { width, mobile } = useDisplay()
 const props = defineProps({
     themeColor: String,
@@ -174,14 +175,14 @@ $on('editForm', (uername_) => {
     dialog.value = true
     username.value = uername_
     formType.value = 'edit'
-    cardText.value = i18n.global.t('button.edit')
+    cardText.value = t('button.edit')
 })
 
 $on('delForm', (uername_) => {
     dialog.value = true
     username.value = uername_
     formType.value = 'del'
-    cardText.value = i18n.global.t('button.del')
+    cardText.value = t('button.del')
 })
 
 </script>

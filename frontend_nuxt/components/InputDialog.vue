@@ -11,7 +11,6 @@ const update = () => {
 const close = () => {
     dialog.value = false
 }
-
 </script>
 
 <template>

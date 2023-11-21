@@ -31,18 +31,25 @@ onMounted(() => {
   setTimeout(() => {
     // Code to modify the widget's z-index here
     const bmc = document.getElementById('bmc-wbtn');
+    bmc.nextSibling.remove();
     if (bmc) {
       bmc.style.zIndex = '0'; // Set the desired z-index
     }
-  }, 500);
-
+  }, 100);
 })
 
+useSeoMeta({
+  description: 'A profile estimator for Singapore PR applications',
+  ogDescription: "chaoran's data story",
+  ogTitle: 'iChaoran'
+  // ogImage: '<>',
+  // twitterCard: 'summary_large_image',
+})
 
 useHead({
   title: 'Singapore PR Porfile Estimator',
   meta: [
-    { name: 'description', content: 'My amazing site.' },
+    { name: 'description', content: 'A profile estimator for Singapore PR applications' },
     { name: 'msapplication-TileColor', content: '#ffffff' },
     { name: 'msapplication-TileImage', content: '/favicon/ms-icon-144x144.png' },
     { name: 'theme-color', content: '#ffffff' },
@@ -50,6 +57,7 @@ useHead({
   bodyAttrs: {
     class: 'test'
   },
+
   link: [
     {rel: 'apple-touch-icon', sizes: "57x57", href:"/favicon/apple-icon-57x57.png"},
     {rel: 'apple-touch-icon', sizes: "60x60", href:"/favicon/apple-icon-60x60.png"},
@@ -66,16 +74,17 @@ useHead({
     {rel: 'icon', type: 'image/png', sizes: "16x16", href:"/favicon/favicon-16x16.png"},
     {rel: 'manifest', href: "/favicon/manifest.json"}
   ],
-  script: [ { 
-    'data-name': "BMC-Widget" , 
-    'data-cfasync': "false", 
-    'src': 'https://cdnjs.buymeacoffee.com/1.0.0/widget.prod.min.js', 
-    'data-id': 'chaoran', 
-    'data-description': 'Support me on Buy me a coffee!', 
-    'data-message':'', 
-    'data-color':"#40DCA5",
-    'data-position':"Top", 
-    'data-x_margin': "18", 
+  script: [{
+    'data-name': "BMC-Widget",
+    'data-cfasync': false,
+    async: true,
+    'src': 'https://cdnjs.buymeacoffee.com/1.0.0/widget.prod.min.js',
+    'data-id': 'chaoran',
+    'data-description': 'Support me on Buy me a coffee!',
+    'data-message': '',
+    'data-color': "#40DCA5",
+    'data-position': "Top",
+    'data-x_margin': "18",
     'data-y_margin': "18"} ]
 })
 

@@ -48,7 +48,7 @@
         </v-card-text>
 
       </v-card>
-      <Dialog2 :theme-color="themeColor"></Dialog2>
+      <QuickActionDialog :theme-color="themeColor"></QuickActionDialog>
       
     </v-col>
   </v-row>
@@ -59,7 +59,7 @@ import { $emit, $on } from 'vue-happy-bus'
 import { ref } from 'vue'
 import { computed } from 'vue';
 import { i18n } from '@/plugins/i18n';
-import Dialog2 from './Dialog2.vue';
+import QuickActionDialog from './Dialogs/QuickActionDialog.vue';
 const props = defineProps({
   records: Array,
   loading: Boolean,

@@ -1,6 +1,8 @@
 <template>
   <v-container class="px-0">
     <QueryMatches :theme-color="themeColor"/>
+    <v-btn :color="themeColor" rounded @click="$emit('open-insight-dialog')">Show me insights</v-btn>
+    <InsightDialog />
     <RecentRecords :records="records" :loading="loading" :theme-color="themeColor"/>
   </v-container>
 </template>
@@ -11,7 +13,10 @@ import QueryMatches from './QueryMatches.vue';
 import { ref } from 'vue';
 import { fetchData } from '@/assets/js/apis'
 import { onMounted } from 'vue';
-import { $on } from 'vue-happy-bus'
+import { $on, $emit } from 'vue-happy-bus'
+import InsightDialog from './Dialogs/InsightsDialog.vue';
+
+
 
 $on('edit-item', (editedItem) => {
   console.log(editedItem)

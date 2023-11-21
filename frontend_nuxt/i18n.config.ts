@@ -11,6 +11,7 @@ export default defineI18nConfig(() => ({
                 del: 'delete my record',
                 lazy: 'lazy to type? click me',
                 action: 'Actions',
+                insight: 'Show me insights'
             },
             status: {
                 pass: 'pass',
@@ -18,7 +19,7 @@ export default defineI18nConfig(() => ({
                 pending: 'pending'
             },
             form: {
-                title: 'Choose your profile from template',
+                title: 'Profile template',
                 age: 'Age',
                 gender: 'Gender',
                 nat: 'Nationality',
@@ -51,6 +52,7 @@ export default defineI18nConfig(() => ({
                 del: 'delete my record',
                 lazy: 'lazy to type? click me',
                 action: 'Actions',
+                insight: 'Show me insights'
             },
             status: {
                 pass: 'pass',
@@ -91,6 +93,7 @@ export default defineI18nConfig(() => ({
                 del: '删除我的记录',
                 lazy: '懒得打字？ 戳我',
                 action: '我的操作',
+                insight: '显示过往趋势'
             },
             search: {
                 title: '搜索与您相似的案例',
