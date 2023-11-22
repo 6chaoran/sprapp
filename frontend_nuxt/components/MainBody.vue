@@ -1,7 +1,7 @@
 <template>
   <v-container class="px-0">
     <QueryMatches :theme-color="themeColor"/>
-    <v-btn :color="themeColor" rounded @click="$emit('open-insight-dialog')">{{ $t('button.insight') }}</v-btn>
+    <v-btn :color="themeColor" class="mt-3" rounded @click="openInsightDialog">{{ $t('button.insight') }}</v-btn>
     <InsightDialog />
     <RecentRecords :records="records" :loading="loading" :theme-color="themeColor"/>
   </v-container>
@@ -12,6 +12,7 @@
 import { $on,$emit } from 'vue-happy-bus'
 import { fetchData } from '~/server/api';
 import InsightDialog from '~/components/Dialogs/InsightsDialog.vue';
+const { logEventGA } = useAnalytics() // auto-imported
 
 $on('edit-item', (editedItem) => {
   console.log(editedItem)
@@ -22,6 +23,11 @@ $on('add-item', (editedItem) => {
   console.log(editedItem)
   records.value.unshift(editedItem)
 })
+
+const openInsightDialog = () => {
+  $emit('open-insight-dialog')
+  logEventGA('click_insight')
+}
 
 const themeColor = "teal-darken-4";
 

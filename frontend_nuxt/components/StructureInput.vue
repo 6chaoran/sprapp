@@ -45,11 +45,13 @@ const { locale, setLocale } = useI18n();
 import { computed } from 'vue';
 import { $emit } from 'vue-happy-bus';
 import { useDisplay } from 'vuetify'
+const { logEventGA } = useAnalytics() // auto-imported
 const props = defineProps({
     themeColor: String,
 })
 const dialog = ref(false)
 const update = () => {
+    logEventGA('click_structure_input')
     dialog.value = true
 }
 const save = () => {

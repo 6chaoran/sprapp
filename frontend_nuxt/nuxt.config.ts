@@ -33,6 +33,11 @@ export default defineNuxtConfig({
       useVuetifyLabs: false, //true | false, 
     }
   },
+  runtimeConfig: {
+    public: {
+      gtagId: "G-FG3L7LZ5CN",
+    }
+  },
   devServer: {
     port: 4000
   }

@@ -3,7 +3,7 @@
         <v-dialog v-model="dialog" max-width="500px" :fullscreen="mobile">
             <template v-slot:activator="{ attrs }">
                 <v-row>
-                    <v-btn :color="themeColor" dark v-bind="attrs" @click="update" :width="btnWidth">
+                    <v-btn :color="themeColor" dark v-bind="attrs" @click="update" :width="btnWidth"  rounded="xl" >
                         {{ buttonText }}
                     </v-btn>
                 </v-row>

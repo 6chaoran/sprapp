@@ -15,6 +15,7 @@
 </template>
 <script setup>
 import { $on } from 'vue-happy-bus';
+const { logEventGA } = useAnalytics() // auto-imported
 const showLazyTyping = ref(false)
 const message = ref(null)
 const emit = defineEmits(['data'])
@@ -23,6 +24,7 @@ const props = defineProps({
 }) 
 const sendMessage = () => {
     emit('data', message.value);
+    logEventGA('search', {query: message.value})
 }
 const clearMessage = () => {
     message.value = null
@@ -34,7 +36,7 @@ $on('profileMsg', (msg) => {
 })
 
 const touch = () => {
-        showLazyTyping.value = true;
+    showLazyTyping.value = true;
 
 }
 </script>
