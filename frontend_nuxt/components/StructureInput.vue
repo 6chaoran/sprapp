@@ -2,8 +2,8 @@
     <v-dialog v-model="dialog" max-width="500px" :fullscreen="mobile">
         <template v-slot:activator="{ attrs }">
             <v-row>
-                <v-btn :color="themeColor" dark v-bind="attrs" @click="update" variant='text'>
-                    {{ $t('button.lazy') }} <p style="font-size: 2rem">😜</p>
+                <v-btn :color="themeColor" dark v-bind="attrs" @click="update" rounded="xl" >
+                    {{ $t('button.lazy') }}
                 </v-btn>
             </v-row>
         </template>

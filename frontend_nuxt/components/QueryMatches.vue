@@ -1,5 +1,5 @@
 <template>
-    <InputMessage @data="sendMessage" />
+    <InputMessage @data="sendMessage" :theme-color="themeColor"/>
     <Spinner v-if="showSpinner" :spinnerMessage="$t('query.progress')" :themeColor="themeColor" />
     <div v-if="showOutput">
         <QueryOutput :matches="matches" :resultStyle="resultStyle" :prediction="prediction" :color="themeColor" />

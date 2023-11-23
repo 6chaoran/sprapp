@@ -11,7 +11,7 @@ const { width, mobile } = useDisplay()
 
 const title = computed(() => {
   if (locale.value === 'zh'){
-      return mobile.value ? '新加坡PR申请评估' : '新加坡永居申请条件评估'
+      return mobile.value ? 'SPR申请评估' : '新加坡永居申请条件评估'
     }    
   return mobile.value ? 'SGPRProfiler' : 'SGPRProfiler: A Singapore PR Profile Evaluator'
 })

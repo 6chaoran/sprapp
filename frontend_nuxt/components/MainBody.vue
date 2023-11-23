@@ -1,6 +1,12 @@
 <template>
   <v-container class="px-0">
-    <h1 v-if="!mobile">Navigate Your PR Journey with Confidence</h1>
+      <div v-if="mobile">
+        <h3>A Singapore PR Profile Evaluator</h3>
+      <p>to navigate your PR journey with confidence</p>
+      </div>
+      <div v-else>
+        <h1>Navigate Your PR Journey with Confidence</h1>
+      </div>
     <QueryMatches :theme-color="themeColor"/>
     <v-btn :color="themeColor" class="mt-3" rounded @click="openInsightDialog">{{ $t('button.insight') }}</v-btn>
     <InsightDialog />

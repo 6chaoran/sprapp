@@ -31,7 +31,7 @@ export default defineI18nConfig(() => ({
             },
             search: {
                 title: 'Search your similar profile',
-                label: 'Enter your profile here',
+                label: 'Enter your profile here to evaluate',
                 hint: 'You are free to input any languages that best describe your profile of Singapore PR application.'
             },
             recent_records: 'Recent Records:',
@@ -60,7 +60,7 @@ export default defineI18nConfig(() => ({
                 pending: 'pending'
             },
             form: {
-                title: 'Choose your profile from template',
+                title: 'Profile Template',
                 age: 'Age',
                 gender: 'Gender',
                 nat: 'Nationality',
