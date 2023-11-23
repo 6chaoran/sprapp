@@ -13,7 +13,7 @@ const title = computed(() => {
   if (locale.value === 'zh'){
       return mobile.value ? '新加坡PR申请评估' : '新加坡永居申请条件评估'
     }    
-  return mobile.value ? 'SPR Profile Estimator' : 'Singapore PR Profile Estimator'
+  return mobile.value ? 'SGPRProfiler' : 'SGPRProfiler: A Singapore PR Profile Evaluator'
 })
 const version = ref('  ');
 const getTitle = () => {
@@ -39,17 +39,23 @@ onMounted(() => {
 })
 
 useSeoMeta({
-  description: 'A profile estimator for Singapore PR applications',
-  ogDescription: "chaoran's data story",
-  ogTitle: 'iChaoran'
-  // ogImage: '<>',
+  description: 'Explore recent applications submitted by peers and leverage our advanced AI models to evaluate and enhance your own application profile.',
+  ogDescription: 'Explore recent applications submitted by peers and leverage our advanced AI models to evaluate and enhance your own application profile. ',
+  ogTitle: 'SGPRProfiler: A Singapore PR Profile Evaluator',
+  ogLocale: 'en_US',
+  ogUrl: 'https://spr.ichaoran.com',
+  ogType: 'website',
+  ogImage: 'https://spr.ichaoran.com/masthead.avif',
   // twitterCard: 'summary_large_image',
+  charset: 'utf-8',
+
 })
 
 useHead({
-  title: 'Singapore PR Porfile Estimator',
+  title: 'SGPRProfiler: Navigate Your PR Journey with Confidence',
+  htmlAttrs: { lang: 'en' },
   meta: [
-    { name: 'description', content: 'A profile estimator for Singapore PR applications' },
+    // { name: 'description', content:  },
     { name: 'msapplication-TileColor', content: '#ffffff' },
     { name: 'msapplication-TileImage', content: '/favicon/ms-icon-144x144.png' },
     { name: 'theme-color', content: '#ffffff' },
@@ -72,7 +78,8 @@ useHead({
     {rel: 'icon', type: 'image/png', sizes: "32x32", href:"/favicon/favicon-32x32.png"},
     {rel: 'icon', type: 'image/png', sizes: "96x96", href:"/favicon/favicon-96x96.png"},
     {rel: 'icon', type: 'image/png', sizes: "16x16", href:"/favicon/favicon-16x16.png"},
-    {rel: 'manifest', href: "/favicon/manifest.json"}
+    {rel: 'manifest', href: "/favicon/manifest.json"},
+    { rel: 'canonical', href: 'https://spr.ichaoran.com/' }
   ],
   script: [{
     'data-name': "BMC-Widget",
@@ -92,9 +99,13 @@ useHead({
 
 <template>
   <v-app>
-    <v-app-bar app :color="themeColor" image="/masthead.avif" density="default" rounded>
+    <v-app-bar app :color="themeColor" image="/masthead.avif" 
+      density="default" rounded>
       <template v-slot:image>
-        <v-img gradient="to top right, rgba(19,84,122,.8), rgba(128,208,199,.8)"></v-img>
+        <v-img alt="SGPRProfile-site-logo" 
+               title="SGPRProfile-site-logo" 
+               loading="lazy"
+               gradient="to top right, rgba(19,84,122,.8), rgba(128,208,199,.8)"></v-img>
       </template>
       <template v-slot:prepend>
         <v-app-bar-nav-icon @click="drawer = !drawer"></v-app-bar-nav-icon>

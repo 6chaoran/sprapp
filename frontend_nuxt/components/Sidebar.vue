@@ -37,8 +37,15 @@
     </v-row>
     <v-row style="position: fixed; left: 9px; bottom: 18px; justify-content: center;">
         <v-col>
-            <a href="https://www.buymeacoffee.com/chaoran"><img
-                    src="https://img.buymeacoffee.com/button-api/?text=Buy me a coffee&emoji=☕&slug=chaoran&button_colour=FFDD00&font_colour=000000&font_family=Cookie&outline_colour=000000&coffee_colour=ffffff" /></a>
+            <a href="https://www.buymeacoffee.com/chaoran">
+                <img
+                    src="https://img.buymeacoffee.com/button-api/?text=Buy me a coffee&emoji=☕&slug=chaoran&button_colour=FFDD00&font_colour=000000&font_family=Cookie&outline_colour=000000&coffee_colour=ffffff" 
+                    alt="buy me coffee banner"
+                    loading="lazy"
+                    width="235"
+                    height="50"
+                    title="buy me coffee banner"
+                    /></a>
         </v-col></v-row>
 </template>
 

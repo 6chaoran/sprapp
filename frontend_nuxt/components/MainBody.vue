@@ -1,5 +1,6 @@
 <template>
   <v-container class="px-0">
+    <h1 v-if="!mobile">Navigate Your PR Journey with Confidence</h1>
     <QueryMatches :theme-color="themeColor"/>
     <v-btn :color="themeColor" class="mt-3" rounded @click="openInsightDialog">{{ $t('button.insight') }}</v-btn>
     <InsightDialog />
@@ -11,8 +12,10 @@
 
 import { $on,$emit } from 'vue-happy-bus'
 import { fetchData } from '~/server/api';
+import { useDisplay } from 'vuetify'
 import InsightDialog from '~/components/Dialogs/InsightsDialog.vue';
 const { logEventGA } = useAnalytics() // auto-imported
+const { width, mobile } = useDisplay()
 
 $on('edit-item', (editedItem) => {
   console.log(editedItem)
