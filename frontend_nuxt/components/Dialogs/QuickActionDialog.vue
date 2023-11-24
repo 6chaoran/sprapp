@@ -2,7 +2,7 @@
     <slot>
     </slot>
     <v-dialog v-model="dialog" max-width="500px" :fullscreen="mobile">
-        <v-card>
+        <v-card class="pt-12 px-6">
             <v-card-title>
                 <span class="text-h5">{{ cardText.toUpperCase() }}</span>
             </v-card-title>

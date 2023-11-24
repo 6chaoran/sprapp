@@ -1,7 +1,7 @@
 <template>
   <v-row class="mt-6">
     <v-col>
-      {{ $t('recent_records') }}
+      <h3>{{ $t('recent_records') }}</h3>
     </v-col>
   </v-row>
   <v-row v-if="loading"> 

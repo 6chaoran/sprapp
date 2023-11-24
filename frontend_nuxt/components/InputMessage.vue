@@ -2,7 +2,8 @@
     <v-row class="mx-1 my-3">
         <v-textarea v-model="message" 
             :color="themeColor" 
-            :append-icon="message ? 'mdi-send' : ''" @click:clear="clearMessage"
+            :append-icon="message ? 'mdi-send' : ''" 
+            @click:clear="clearMessage"
             @click:append="sendMessage" auto-grow clearable rows="1" row-height="15" variant="underlined"
             @keyup.ctrl.enter.prevent="sendMessage"
             :label="$t('search.label')"
@@ -30,7 +31,6 @@ const clearMessage = () => {
 
 $on('profileMsg', (msg) => {
     message.value = msg
-    showLazyTyping.value = false
 })
 
 

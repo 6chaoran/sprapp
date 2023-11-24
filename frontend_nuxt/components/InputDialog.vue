@@ -22,7 +22,7 @@ const close = () => {
             </v-btn>
         </template>
         <template v-slot:default="{ isActive }">
-            <v-card>
+            <v-card class="py-6">
                 <v-card-title class="mt-3">{{ $t('search.title') }}</v-card-title>
                 <v-card-text>
                     <QueryMatches :theme-color="themeColor" />

@@ -9,7 +9,7 @@ export default defineI18nConfig(() => ({
                 cancel: 'cancel',
                 save: 'save',
                 del: 'delete my record',
-                lazy: 'lazy to type? click me',
+                lazy: 'lazy typing? click me',
                 action: 'Actions',
                 insight: 'Show me insights'
             },
@@ -34,7 +34,7 @@ export default defineI18nConfig(() => ({
                 label: 'Enter your profile here to evaluate',
                 hint: 'You are free to input any languages that best describe your profile of Singapore PR application.'
             },
-            recent_records: 'Recent Records:',
+            recent_records: 'Navigate Recent Records:',
             query: {
                 progress: 'Query In Progres ...'
             },
@@ -50,7 +50,7 @@ export default defineI18nConfig(() => ({
                 cancel: 'cancel',
                 save: 'save',
                 del: 'delete my record',
-                lazy: 'lazy to type? click me',
+                lazy: 'lazy typing? click me',
                 action: 'Actions',
                 insight: 'Show me insights'
             },
@@ -75,7 +75,7 @@ export default defineI18nConfig(() => ({
                 label: 'Enter your profile here',
                 hint: 'You are free to input any languages that best describe your profile of Singapore PR application.'
             },
-            recent_records: 'Recent Records:',
+            recent_records: 'Navigate Recent Records:',
             query: {
                 progress: 'Query In Progres ...'
             },

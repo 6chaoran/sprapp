@@ -1,6 +1,6 @@
 <template>
     <v-dialog v-model="dialogInsight" :fullscreen="mobile">
-        <v-card class="pa-6">
+        <v-card class="pt-12 px-6">
             <InsightCharts />
             <v-card-actions class="mb-12">
                 <v-spacer></v-spacer>

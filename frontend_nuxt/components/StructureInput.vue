@@ -8,7 +8,7 @@
             </v-row>
         </template>
         <template v-slot:default="{ isActive }">
-            <v-card>
+            <v-card class="py-12 px-6">
                 <v-card-title>
                     <span class="text-h5">{{ $t('form.title') }}</span>
                 </v-card-title>
