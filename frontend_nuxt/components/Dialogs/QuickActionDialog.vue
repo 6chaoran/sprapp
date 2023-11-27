@@ -1,31 +1,38 @@
 <template>
     <slot>
     </slot>
-    <v-dialog v-model="dialog" max-width="500px" :fullscreen="mobile">
-        <v-card class="pt-12 px-6">
-            <v-card-title>
-                <span class="text-h5">{{ cardText.toUpperCase() }}</span>
-            </v-card-title>
+    <v-dialog v-model="dialog" max-width="500px">
+        <v-toolbar class="px-6 text-h5 text-capitalize" :color="themeColor">{{ cardText }}</v-toolbar>
+        <v-card>
             <v-card-text>
                 <QuickActionForm :formType="formType" :themeColor="themeColor" :desc="desc" @edited-item="updateEditedItem"
                     @ready-to-submit="checkFormReadiness" :username="username"/>
             </v-card-text>
             <v-card-actions class="mb-12">
-                <v-spacer></v-spacer>
-                <v-btn :color="themeColor" text @click="close">
-                    {{ $t('button.cancel') }}
-                </v-btn>
-                <v-btn v-if="formType === 'edit'" :color="themeColor" text @click="saveEditRow" :disabled="!readyToSubmit">
-                    {{ $t('button.save') }}
-                </v-btn>
-                <v-btn v-if="formType === 'add'" :color="themeColor" text @click="saveAddRow" :disabled="!readyToSubmit">
-                    {{ $t('button.save') }}
-                </v-btn>
-                <v-btn v-if="formType === 'del'" :color="themeColor" text @click="saveDelRow" :disabled="!readyToSubmit">
-                    {{ $t('button.del') }}
-                </v-btn>
+  
             </v-card-actions>
         </v-card>
+        <v-footer>
+            <v-spacer></v-spacer>
+                <v-btn :color="themeColor" variant="text" @click="close" class="text-capitalize">
+                    {{ $t('button.cancel') }}
+                </v-btn>
+                <v-btn v-if="formType === 'edit'" :color="themeColor" variant="text" 
+                class="text-capitalize"
+                @click="saveEditRow" :disabled="!readyToSubmit">
+                    {{ $t('button.save') }}
+                </v-btn>
+                <v-btn v-if="formType === 'add'" :color="themeColor" variant="text" 
+                class="text-capitalize"
+                @click="saveAddRow" :disabled="!readyToSubmit">
+                    {{ $t('button.save') }}
+                </v-btn>
+                <v-btn v-if="formType === 'del'" :color="themeColor" variant="text" 
+                class="text-capitalize"
+                @click="saveDelRow" :disabled="!readyToSubmit">
+                    {{ $t('button.del') }}
+                </v-btn>
+        </v-footer>
     </v-dialog>
 </template>
 <script setup>

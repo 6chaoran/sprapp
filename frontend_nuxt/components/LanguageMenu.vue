@@ -20,7 +20,7 @@
 <script setup>
 const { locale, setLocale } = useI18n()
 const location = "bottom"
-const lang = ref(['raw'])
+const lang = ref(['en'])
 const props = defineProps({
     themeColor: String,
 })
@@ -29,7 +29,7 @@ const emitLang = () => {
     setLocale(lang.value[0])
 }
 const items = [
-    {title: "Original", value: "raw"},
+    // {title: "Original", value: "raw"},
     {title: "English", value: "en"},
     {title: "简体中文", value: "zh"},
 ]

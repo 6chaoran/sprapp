@@ -1,17 +1,15 @@
 <template>
-    <v-dialog v-model="dialog" max-width="500px" :fullscreen="mobile">
+    <v-dialog v-model="dialog" max-width="500px" >
         <template v-slot:activator="{ attrs }">
             <v-row>
-                <v-btn :color="themeColor" dark v-bind="attrs" @click="update" rounded="xl" >
+                <v-btn :color="themeColor" dark v-bind="attrs" @click="update" rounded="xl" class="text-capitalize" >
                     {{ $t('button.lazy') }}
                 </v-btn>
             </v-row>
         </template>
         <template v-slot:default="{ isActive }">
-            <v-card class="py-12 px-6">
-                <v-card-title>
-                    <span class="text-h5">{{ $t('form.title') }}</span>
-                </v-card-title>
+            <v-toolbar class="px-6 text-h5" :color="themeColor">{{ $t('form.title') }}</v-toolbar>
+            <v-card>
                 <v-card-text>
                     <v-form>
             {{ profileMsg }}
@@ -24,16 +22,17 @@
             </v-list>
         </v-form>
                 </v-card-text>
-                <v-card-actions>
-                    <v-spacer></v-spacer>
-                    <v-btn :color="themeColor" text @click="close">
+
+            </v-card>
+            <v-footer>
+                <v-spacer></v-spacer>
+                <v-btn :color="themeColor" variant="text" @click="close">
                         {{ $t('button.cancel') }}
                     </v-btn>
-                    <v-btn :color="themeColor" text @click="save">
+                    <v-btn :color="themeColor" variant="text" @click="save">
                         {{ $t('button.save') }}
                     </v-btn>
-                </v-card-actions>
-            </v-card>
+            </v-footer>
 
         </template>
 

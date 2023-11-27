@@ -31,11 +31,12 @@ onMounted(() => {
   setTimeout(() => {
     // Code to modify the widget's z-index here
     const bmc = document.getElementById('bmc-wbtn');
-    bmc.nextSibling.remove();
     if (bmc) {
+      bmc.nextSibling.remove();
       bmc.style.zIndex = '0'; // Set the desired z-index
     }
   }, 100);
+  setLocale('en');
 })
 
 useSeoMeta({
