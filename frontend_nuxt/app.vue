@@ -30,7 +30,7 @@ onMounted(() => {
       bmc.style.zIndex = '0'; // Set the desired z-index
     }
   }, 100);
-  setLocale('en');
+  // setLocale('en');
 })
 
 useSeoMeta({
@@ -99,7 +99,7 @@ useHead({
       
       <v-app-bar-title 
         style="flex:none; color:#00C16A; font-weight:bolder;"
-        class="text-h5">{{ title }} <span class="text-grey-darken-3">{{ mobile ? '' : '| A Singapore PR Profile Evaluator'}}</span><span class="subclass">{{ version }}</span> </v-app-bar-title>
+        class="text-h5"><a style="color:unset;text-decoration: unset;" href="/">{{ title }} <span class="text-grey-darken-3">{{ mobile ? '' : '| A Singapore PR Profile Evaluator'}}</span></a><span class="subclass">{{ version }}</span> </v-app-bar-title>
       <v-spacer></v-spacer>
       <InputDialog :theme-color="themeColor" />
       <LanguageMenu :theme-color="themeColor" />

@@ -44,6 +44,11 @@ export default defineI18nConfig(() => ({
         //     }
         // },
         en: {
+            title: {
+                name: 'SGPRProfile',
+                slogan: 'A Singapore PR Profile Evaluator',
+                subtitle: 'navigate your PR journey with confidence'
+            },
             button: {
                 add: 'add my record',
                 edit: 'edit my record',
@@ -85,6 +90,11 @@ export default defineI18nConfig(() => ({
             }
         },
         zh: {
+            title: {
+                name: 'SGPRProfile',
+                slogan: '新加坡永居申请评估引擎',
+                subtitle: '让您自信从容地了解永居申请机会'
+            },
             button: {
                 add: '添加我的记录',
                 edit: '修改我的记录',

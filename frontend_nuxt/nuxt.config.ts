@@ -9,10 +9,16 @@ export default defineNuxtConfig({
     '@nuxtjs/i18n',
   ],
   i18n: {
-    locales: ['en', 'zh', 'raw'], // set locale
-    defaultLocale: 'raw',
+    locales: [{
+      code: 'en',
+      iso: 'en-US'
+    },{
+      code: 'zh',
+      iso: 'zh-SG'
+    }], // set locale
+    defaultLocale: 'en',
     detectBrowserLanguage: false,
-    strategy: "prefix",
+    strategy: "prefix_except_default",
     fallbackLocale: 'en', // set fallback locale
     // 👇 Reference the Vue I18n config file
     vueI18n: "./i18n.config.ts",
