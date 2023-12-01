@@ -2,47 +2,47 @@ export default defineI18nConfig(() => ({
     // We'll fill this in momentarily
     legacy: false,
     messages: {
-        raw: {
-            button: {
-                add: 'add my record',
-                edit: 'edit my record',
-                cancel: 'cancel',
-                save: 'save',
-                del: 'delete my record',
-                lazy: 'lazy typing? click me',
-                action: 'Actions',
-                insight: 'Show me insights'
-            },
-            status: {
-                pass: 'pass',
-                rejected: 'rejected',
-                pending: 'pending'
-            },
-            form: {
-                title: 'Profile template',
-                age: 'Age',
-                gender: 'Gender',
-                nat: 'Nationality',
-                occ: 'Occupation',
-                income: 'Income',
-                kid: 'With Kids',
-                yrsg: 'Years in Singapore',
-                yrwork: 'Years of working'  
-            },
-            search: {
-                title: 'Search your similar profile',
-                label: 'Enter your profile here to evaluate',
-                hint: 'You are free to input any languages that best describe your profile of Singapore PR application.'
-            },
-            recent_records: 'Navigate Recent Records:',
-            query: {
-                progress: 'Query In Progres ...'
-            },
-            links: {
-                useful: 'Useful Links',
-                ica: 'ICA PR Webiste',
-            }
-        },
+        // raw: {
+        //     button: {
+        //         add: 'add my record',
+        //         edit: 'edit my record',
+        //         cancel: 'cancel',
+        //         save: 'save',
+        //         del: 'delete my record',
+        //         lazy: 'lazy typing? click me',
+        //         action: 'Actions',
+        //         insight: 'Show me insights'
+        //     },
+        //     status: {
+        //         pass: 'pass',
+        //         rejected: 'rejected',
+        //         pending: 'pending'
+        //     },
+        //     form: {
+        //         title: 'Profile template',
+        //         age: 'Age',
+        //         gender: 'Gender',
+        //         nat: 'Nationality',
+        //         occ: 'Occupation',
+        //         income: 'Income',
+        //         kid: 'With Kids',
+        //         yrsg: 'Years in Singapore',
+        //         yrwork: 'Years of working'  
+        //     },
+        //     search: {
+        //         title: 'Search your similar profile',
+        //         label: 'Enter your profile here to evaluate',
+        //         hint: 'You are free to input any languages that best describe your profile of Singapore PR application.'
+        //     },
+        //     recent_records: 'Navigate Recent Records:',
+        //     query: {
+        //         progress: 'Query In Progres ...'
+        //     },
+        //     links: {
+        //         useful: 'Useful Links',
+        //         ica: 'ICA PR Webiste',
+        //     }
+        // },
         en: {
             button: {
                 add: 'add my record',

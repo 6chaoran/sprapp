@@ -6,8 +6,8 @@
         <p>navigate your PR journey with confidence</p>
       </div>
       <div v-else>
-        <h1 style="color: #0f172a;"><span style="color:#00C16A">SGPRProfiler</span> A Singapore PR Profile Evaluator</h1>
-        <p>help you navigate the PR journey with confidence</p>
+        <h1 class="text-grey-darken-3"><span style="color:#00C16A;">SGPRProfiler</span> | A Singapore PR Profile Evaluator</h1>
+        <p class="text-h5">Navigate your PR journey with confidence</p>
       </div>
     
     <QueryMatches :theme-color="themeColor"/>
@@ -41,7 +41,7 @@ const openInsightDialog = () => {
   logEventGA('click_insight')
 }
 
-const themeColor = "teal-darken-4";
+const themeColor = "#00C16A";
 
 const records = ref([
   // {username: 'user', datetime: '2023-01-01', description: 'pass', applied_date:'2023-01-01', closed_date: '2023-09-01', status: 'rejected', update_ts: '2023-01-01'},

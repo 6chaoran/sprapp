@@ -6,15 +6,9 @@ import { fetchData } from '~/server/api'
 // import { getAnalytics, logEvent } from "firebase/analytics";
 const { locale, setLocale } = useI18n()
 
-const themeColor = "teal-darken-4"
+const themeColor = "#00C16A" //"teal-darken-4"
 const { width, mobile } = useDisplay()
-
-const title = computed(() => {
-  if (locale.value === 'zh') {
-    return mobile.value ? 'SPR申请评估' : '新加坡永居申请条件评估'
-  }
-  return mobile.value ? 'SGPRProfiler' : 'SGPRProfiler: A Singapore PR Profile Evaluator'
-})
+const title = ref('SGPRProfile')
 const version = ref('  ');
 const getTitle = () => {
   const resp = fetchData('/version')
@@ -104,9 +98,8 @@ useHead({
     <v-app-bar :elevation=" mobile ? 1 : 0" color="rgba(255,255,255,0.9)">
       
       <v-app-bar-title 
-        style="flex:none; color:#00C16A; font-weight:bolder;" :text="title" 
-        class="text-h5">
-        <span class="subclass">{{ version }}</span> </v-app-bar-title>
+        style="flex:none; color:#00C16A; font-weight:bolder;"
+        class="text-h5">{{ title }} <span class="text-grey-darken-3">{{ mobile ? '' : '| A Singapore PR Profile Evaluator'}}</span><span class="subclass">{{ version }}</span> </v-app-bar-title>
       <v-spacer></v-spacer>
       <InputDialog :theme-color="themeColor" />
       <LanguageMenu :theme-color="themeColor" />
@@ -114,7 +107,7 @@ useHead({
     </v-app-bar>
     <v-main>
 
-    <v-navigation-drawer  v-model="drawer" location="right" :floating="true" >
+    <v-navigation-drawer  v-model="drawer" location="right" :floating="true" :temporary="true">
       <Sidebar :theme-color="themeColor"/>
     </v-navigation-drawer>
       <v-container style="max-width: 1200px;">
