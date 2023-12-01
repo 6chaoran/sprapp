@@ -11,10 +11,10 @@
   </v-row>
   <v-row>
     <v-col class="px-0">
-      <v-card v-for="data in recordsFiltered" :key="data.id" class="my-3" min-height="30px" elevation="2">
+      <v-card v-for="data in recordsFiltered" :key="data.id" class="my-3" min-height="30px" elevation="5" rounded="lg">
         <v-card-text>
           <v-row class="mx-1">
-            {{ data.username }}
+            <strong>{{ data.username }}</strong>
             <v-spacer></v-spacer>
             {{ data.update_ts.replace('T', ' ') }} </v-row>
 

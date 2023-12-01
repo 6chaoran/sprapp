@@ -2,7 +2,7 @@
     <v-menu :location="location">
       <template v-slot:activator="{ props }">
         <v-btn
-          color="white"
+          :size=" mobile ? 'small' : 'default'"
           dark
           icon
           v-bind="props"
@@ -18,12 +18,14 @@
 </template>
 
 <script setup>
+import { useDisplay } from 'vuetify'
 const { locale, setLocale } = useI18n()
 const location = "bottom"
 const lang = ref(['en'])
 const props = defineProps({
     themeColor: String,
 })
+const { mobile } = useDisplay()
 const emit = defineEmits(['lang'])
 const emitLang = () => {
     setLocale(lang.value[0])

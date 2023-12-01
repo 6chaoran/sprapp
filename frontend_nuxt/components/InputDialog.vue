@@ -16,7 +16,7 @@ const close = () => {
 <template>
     <v-dialog v-model="dialog" max-width="600px" :fullscreen="mobile">
         <template v-slot:activator="{ attrs }">
-            <v-btn color="white" icon dark v-bind="attrs" @click="update">
+            <v-btn :size="mobile ? 'small' : 'default'" icon dark v-bind="attrs" @click="update">
                 <!-- <v-icon>mdi-dots-vertical</v-icon> -->
                 <v-icon>mdi-magnify</v-icon>
             </v-btn>

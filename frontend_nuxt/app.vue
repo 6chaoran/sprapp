@@ -10,9 +10,9 @@ const themeColor = "teal-darken-4"
 const { width, mobile } = useDisplay()
 
 const title = computed(() => {
-  if (locale.value === 'zh'){
-      return mobile.value ? 'SPR申请评估' : '新加坡永居申请条件评估'
-    }    
+  if (locale.value === 'zh') {
+    return mobile.value ? 'SPR申请评估' : '新加坡永居申请条件评估'
+  }
   return mobile.value ? 'SGPRProfiler' : 'SGPRProfiler: A Singapore PR Profile Evaluator'
 })
 const version = ref('  ');
@@ -66,20 +66,20 @@ useHead({
   },
 
   link: [
-    {rel: 'apple-touch-icon', sizes: "57x57", href:"/favicon/apple-icon-57x57.png"},
-    {rel: 'apple-touch-icon', sizes: "60x60", href:"/favicon/apple-icon-60x60.png"},
-    {rel: 'apple-touch-icon', sizes: "72x72", href:"/favicon/apple-icon-72x72.png"},
-    {rel: 'apple-touch-icon', sizes: "76x76", href:"/favicon/apple-icon-76x76.png"},
-    {rel: 'apple-touch-icon', sizes: "114x114", href:"/favicon/apple-icon-114x114.png"},
-    {rel: 'apple-touch-icon', sizes: "120x120", href:"/favicon/apple-icon-120x120.png"},
-    {rel: 'apple-touch-icon', sizes: "144x144", href:"/favicon/apple-icon-144x144.png"},
-    {rel: 'apple-touch-icon', sizes: "152x152", href:"/favicon/apple-icon-152x152.png"},
-    {rel: 'apple-touch-icon', sizes: "180x180", href:"/favicon/apple-icon-180x180.png"},
-    {rel: 'icon', type: 'image/png', sizes: "192x192", href:"/favicon/android-icon-192x192.png"},
-    {rel: 'icon', type: 'image/png', sizes: "32x32", href:"/favicon/favicon-32x32.png"},
-    {rel: 'icon', type: 'image/png', sizes: "96x96", href:"/favicon/favicon-96x96.png"},
-    {rel: 'icon', type: 'image/png', sizes: "16x16", href:"/favicon/favicon-16x16.png"},
-    {rel: 'manifest', href: "/favicon/manifest.json"},
+    { rel: 'apple-touch-icon', sizes: "57x57", href: "/favicon/apple-icon-57x57.png" },
+    { rel: 'apple-touch-icon', sizes: "60x60", href: "/favicon/apple-icon-60x60.png" },
+    { rel: 'apple-touch-icon', sizes: "72x72", href: "/favicon/apple-icon-72x72.png" },
+    { rel: 'apple-touch-icon', sizes: "76x76", href: "/favicon/apple-icon-76x76.png" },
+    { rel: 'apple-touch-icon', sizes: "114x114", href: "/favicon/apple-icon-114x114.png" },
+    { rel: 'apple-touch-icon', sizes: "120x120", href: "/favicon/apple-icon-120x120.png" },
+    { rel: 'apple-touch-icon', sizes: "144x144", href: "/favicon/apple-icon-144x144.png" },
+    { rel: 'apple-touch-icon', sizes: "152x152", href: "/favicon/apple-icon-152x152.png" },
+    { rel: 'apple-touch-icon', sizes: "180x180", href: "/favicon/apple-icon-180x180.png" },
+    { rel: 'icon', type: 'image/png', sizes: "192x192", href: "/favicon/android-icon-192x192.png" },
+    { rel: 'icon', type: 'image/png', sizes: "32x32", href: "/favicon/favicon-32x32.png" },
+    { rel: 'icon', type: 'image/png', sizes: "96x96", href: "/favicon/favicon-96x96.png" },
+    { rel: 'icon', type: 'image/png', sizes: "16x16", href: "/favicon/favicon-16x16.png" },
+    { rel: 'manifest', href: "/favicon/manifest.json" },
     { rel: 'canonical', href: 'https://spr.ichaoran.com/' }
   ],
   script: [{
@@ -93,45 +93,47 @@ useHead({
     'data-color': "#40DCA5",
     'data-position': "Top",
     'data-x_margin': "18",
-    'data-y_margin': "18"} ]
+    'data-y_margin': "18"
+  }]
 })
 
 </script>
 
 <template>
-  <v-app>
-    <v-app-bar app :color="themeColor" image="/masthead.avif" 
-      density="default" rounded>
-      <template v-slot:image>
-        <v-img alt="SGPRProfile-site-logo" 
-               title="SGPRProfile-site-logo" 
-               loading="lazy"
-               gradient="to top right, rgba(19,84,122,.8), rgba(128,208,199,.8)"></v-img>
-      </template>
-      <template v-slot:prepend>
-        <v-app-bar-nav-icon @click="drawer = !drawer"></v-app-bar-nav-icon>
-      </template>
-      <v-app-bar-title style="flex:none;" :text="title"><span class="subclass">{{ version }}</span> </v-app-bar-title>
+  <v-app >
+    <v-app-bar :elevation=" mobile ? 1 : 0" color="rgba(255,255,255,0.9)">
+      
+      <v-app-bar-title 
+        style="flex:none; color:#00C16A; font-weight:bolder;" :text="title" 
+        class="text-h5">
+        <span class="subclass">{{ version }}</span> </v-app-bar-title>
       <v-spacer></v-spacer>
       <InputDialog :theme-color="themeColor" />
       <LanguageMenu :theme-color="themeColor" />
+      <v-app-bar-nav-icon @click="drawer = !drawer" :size="mobile ? 'small' : 'default'"></v-app-bar-nav-icon>
     </v-app-bar>
-
-    <v-navigation-drawer app v-model="drawer">
-      <Sidebar :theme-color="themeColor" />
-    </v-navigation-drawer>
-
     <v-main>
-      
-      <v-container style="max-width: 1000px;">
-        <MainBody />
+
+    <v-navigation-drawer  v-model="drawer" location="right" :floating="true" >
+      <Sidebar :theme-color="themeColor"/>
+    </v-navigation-drawer>
+      <v-container style="max-width: 1200px;">
+          <MainBody />
       </v-container>
     </v-main>
-  </v-app>
+</v-app>
+  
 </template>
 
 <style>
 .subclass {
   font-size: small;
+  color: black
+}
+
+.v-toolbar__content {
+  margin-left: auto;
+  max-width: 1200px;
+  margin-right: auto;
 }
 </style>
