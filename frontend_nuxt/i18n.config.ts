@@ -80,7 +80,7 @@ export default defineI18nConfig(() => ({
                 label: 'Enter your profile here',
                 hint: 'You are free to input any languages that best describe your profile of Singapore PR application.'
             },
-            recent_records: 'Navigate Recent Records:',
+            recent_records: 'Recent Records',
             query: {
                 progress: 'Query In Progres ...'
             },
@@ -110,7 +110,7 @@ export default defineI18nConfig(() => ({
                 label: '输入您的申请情况',
                 hint: '您可以自由地输入任何言语来描述您的申请详情。'
             },
-            recent_records: '最近的记录：',
+            recent_records: '最近的记录',
             query: {
                 progress: '查询记录中。。。'
             },

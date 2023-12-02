@@ -1,17 +1,5 @@
 <template>
   <v-container class="px-0">
-      <div v-if="mobile">
-        <h3 style="color:#00C16A">SGPRProfiler</h3>
-        <h3>{{ $t('title.slogan') }}</h3>
-        <p>{{ $t('title.subtitle') }}</p>
-      </div>
-      <div v-else>
-        <h1 class="text-grey-darken-3"><span style="color:#00C16A;">SGPRProfiler</span> | {{ $t('title.slogan') }}</h1>
-        <p class="text-h5">{{ $t('title.subtitle') }}</p>
-      </div>
-    <QueryMatches :theme-color="themeColor"/>
-    <v-btn :color="themeColor" class="mt-3" rounded @click="openInsightDialog">{{ $t('button.insight') }}</v-btn>
-    <InsightDialog />
     <RecentRecords :records="records" :loading="loading" :theme-color="themeColor"/>
   </v-container>
 </template>

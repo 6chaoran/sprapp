@@ -76,19 +76,19 @@ useHead({
     { rel: 'manifest', href: "/favicon/manifest.json" },
     { rel: 'canonical', href: 'https://spr.ichaoran.com/' }
   ],
-  script: [{
-    'data-name': "BMC-Widget",
-    'data-cfasync': false,
-    async: true,
-    'src': 'https://cdnjs.buymeacoffee.com/1.0.0/widget.prod.min.js',
-    'data-id': 'chaoran',
-    'data-description': 'Support me on Buy me a coffee!',
-    'data-message': '',
-    'data-color': "#40DCA5",
-    'data-position': "Top",
-    'data-x_margin': "18",
-    'data-y_margin': "18"
-  }]
+  // script: [{
+  //   'data-name': "BMC-Widget",
+  //   'data-cfasync': false,
+  //   async: true,
+  //   'src': 'https://cdnjs.buymeacoffee.com/1.0.0/widget.prod.min.js',
+  //   'data-id': 'chaoran',
+  //   'data-description': 'Support me on Buy me a coffee!',
+  //   'data-message': '',
+  //   'data-color': "#40DCA5",
+  //   'data-position': "Top",
+  //   'data-x_margin': "18",
+  //   'data-y_margin': "18"
+  // }]
 })
 
 </script>
@@ -96,10 +96,10 @@ useHead({
 <template>
   <v-app >
     <v-app-bar :elevation=" mobile ? 1 : 0" color="rgba(255,255,255,0.9)">
-      
       <v-app-bar-title 
         style="flex:none; color:#00C16A; font-weight:bolder;"
-        class="text-h5"><a style="color:unset;text-decoration: unset;" href="/">{{ title }} <span class="text-grey-darken-3">{{ mobile ? '' : '| A Singapore PR Profile Evaluator'}}</span></a><span class="subclass">{{ version }}</span> </v-app-bar-title>
+        class="text-h5"><a style="color:unset;text-decoration: unset;" href="/">{{ title }} <span class="text-grey-darken-3">{{ mobile ? '' : '| A Singapore PR Profile Evaluator'}}</span></a><span class="subclass">{{ version }}</span> 
+      </v-app-bar-title>
       <v-spacer></v-spacer>
       <InputDialog :theme-color="themeColor" />
       <LanguageMenu :theme-color="themeColor" />
@@ -111,9 +111,14 @@ useHead({
       <Sidebar :theme-color="themeColor"/>
     </v-navigation-drawer>
       <v-container style="max-width: 1200px;">
-          <MainBody />
+          <!-- <MainBody /> -->
+          <NuxtPage />
+
       </v-container>
     </v-main>
+    <v-footer app elevation="1" color="rgba(255, 255, 255, 0.9)">
+      <FooterPage :theme-color="themeColor"/>
+    </v-footer>
 </v-app>
   
 </template>
