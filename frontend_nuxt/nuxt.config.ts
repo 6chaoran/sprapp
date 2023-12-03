@@ -7,12 +7,13 @@ export default defineNuxtConfig({
   modules: [
     '@invictus.codes/nuxt-vuetify',
     '@nuxtjs/i18n',
+    'nuxt-simple-sitemap'
   ],
   i18n: {
     locales: [{
       code: 'en',
       iso: 'en-US'
-    },{
+    }, {
       code: 'zh',
       iso: 'zh-SG'
     }], // set locale
@@ -39,6 +40,13 @@ export default defineNuxtConfig({
       autoImport: true, /*true | false,*/
       useVuetifyLabs: false, //true | false, 
     }
+  },
+  sitemap: {
+
+  },
+  site: {
+    url: 'https://spr.ichaoran.com'
+    // url: 'http://localhost:4000'
   },
   runtimeConfig: {
     public: {

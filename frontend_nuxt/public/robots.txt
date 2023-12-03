@@ -1,0 +1,4 @@
+User-agent: *
+Disallow: /
+
+Sitemap: https://spr.ichaoran.com/sitemap.xml

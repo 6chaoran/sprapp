@@ -5,7 +5,7 @@
         <p class="text-h6 text-black">{{ $t('title.slogan') }}</p>
         <p>{{ $t('title.subtitle') }}</p>
     </div>
-    <div v-else>
+    <div v-else class="mb-3">
         <h1 class="text-grey-darken-3"><span style="color:#00C16A;">SGPRProfiler</span> | {{ $t('title.slogan') }}</h1>
         <p class="text-h5">{{ $t('title.subtitle') }}</p>
     </div>

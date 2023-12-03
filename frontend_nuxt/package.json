@@ -13,10 +13,13 @@
     "@invictus.codes/nuxt-vuetify": "^0.3.0",
     "@nuxt/devtools": "latest",
     "@nuxtjs/i18n": "^8.0.0-rc.5",
-    "nuxt": "^3.7.3"
+    "nuxt": "^3.7.3",
+    "nuxt-simple-robots": "^3.1.9",
+    "nuxt-simple-sitemap": "^4.1.7"
   },
   "dependencies": {
     "@vercel/analytics": "^1.1.1",
+    "axios": "^1.6.2",
     "echarts": "^5.4.3",
     "firebase": "^10.5.0",
     "firebase-functions": "^4.4.1",
