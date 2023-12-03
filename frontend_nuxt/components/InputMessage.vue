@@ -9,7 +9,7 @@
             :label="$t('search.label')"
             :hint="$t('search.hint')"></v-textarea>
     </v-row>
-    <v-row class="mx-3 mt-6 mb-3">
+    <v-row class="mx-3 mt-6 mb-6">
         <structure-input :theme-color="themeColor"/>
     </v-row>
 </template>

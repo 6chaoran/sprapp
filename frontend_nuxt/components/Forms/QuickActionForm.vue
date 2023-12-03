@@ -93,8 +93,8 @@ const verifyUser = () => {
     <v-form v-model="editFormValid">
         <v-container>
             <v-row class="mb-3">
-                Please provide a valid email to recieve a reminder to update your
-                status. 
+                <!-- Please provide a valid email to recieve a reminder to update your
+                status.  -->
             </v-row>
             <v-row align="center">
                 <v-col cols="8" class="px-0">

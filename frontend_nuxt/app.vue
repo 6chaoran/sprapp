@@ -8,7 +8,7 @@ const { locale, setLocale } = useI18n()
 
 const themeColor = "#00C16A" //"teal-darken-4"
 const { width, mobile } = useDisplay()
-const title = ref('SGPRProfile')
+const title = ref('SGPRProfiler')
 const version = ref('  ');
 const getTitle = () => {
   const resp = fetchData('/version')
@@ -98,7 +98,8 @@ useHead({
     <v-app-bar :elevation=" mobile ? 1 : 0" color="rgba(255,255,255,0.9)">
       <v-app-bar-title 
         style="flex:none; color:#00C16A; font-weight:bolder;"
-        class="text-h5"><a style="color:unset;text-decoration: unset;" href="/">{{ title }} <span class="text-grey-darken-3">{{ mobile ? '' : '| A Singapore PR Profile Evaluator'}}</span></a><span class="subclass">{{ version }}</span> 
+        class="text-h5"><a style="color:unset;text-decoration: unset;" href="/">{{ title }} 
+          </a><v-chip density="compact" color="grey" class="mx-1 px-1"><p class="subclass">{{  version }}</p></v-chip>
       </v-app-bar-title>
       <v-spacer></v-spacer>
       <InputDialog :theme-color="themeColor" />
@@ -126,7 +127,7 @@ useHead({
 <style>
 .subclass {
   font-size: small;
-  color: black
+  color: gray;
 }
 
 .v-toolbar__content {

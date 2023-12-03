@@ -1,6 +1,6 @@
 <template>
     <v-row class="mt-9 mx-3">
-        <v-dialog v-model="dialog" max-width="500px" :fullscreen="mobile">
+        <v-dialog v-model="dialog" max-width="500px">
             <template v-slot:activator="{ attrs }">
                 <v-row>
                     <v-btn :color="themeColor" dark v-bind="attrs" @click="update" :width="btnWidth"  rounded="xl" >
@@ -9,10 +9,9 @@
                 </v-row>
             </template>
             <template v-slot:default="{ isActive }">
-                <v-card class="pt-12 px-6">
-                    <v-card-title>
-                        <span class="text-h5">{{ cardText.toUpperCase() }}</span>
-                    </v-card-title>
+                
+                <v-card>
+                    <v-toolbar class="px-6 text-h5 text-capitalize" :color="themeColor">{{ cardText }}</v-toolbar>
                     <v-card-text>
                         <submission-form 
                             :formType="formType"
