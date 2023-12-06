@@ -20,7 +20,7 @@ export default defineNuxtConfig({
     defaultLocale: 'en',
     detectBrowserLanguage: false,
     strategy: "prefix_except_default",
-    fallbackLocale: 'en', // set fallback locale
+    // fallbackLocale: 'en', // set fallback locale
     // 👇 Reference the Vue I18n config file
     vueI18n: "./i18n.config.ts",
   },

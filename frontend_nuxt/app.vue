@@ -117,7 +117,7 @@ useHead({
 
       </v-container>
     </v-main>
-    <v-footer app elevation="1" color="rgba(255, 255, 255, 0.9)">
+    <v-footer app elevation="1" color="rgba(255, 255, 255, 1)">
       <FooterPage :theme-color="themeColor"/>
     </v-footer>
 </v-app>
