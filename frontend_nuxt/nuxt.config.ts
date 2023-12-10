@@ -28,6 +28,9 @@ export default defineNuxtConfig({
     /* vuetify options */
     vuetifyOptions: {
       // @TODO: list all vuetify options
+      display: {
+        mobileBreakpoint: 'sm'
+      }
     },
 
     moduleOptions: {
